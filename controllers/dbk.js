@@ -1,8 +1,8 @@
 /**
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
- * 
+ *
  *  This file is part of safetymapDBK
- *  
+ *
  *  safetymapDBK is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -56,7 +56,7 @@ exports.postAnnotation = function(req, res) {
             return;
         }
     );
-    
+
 };
 
 exports.getObject = function(req, res) {
@@ -116,7 +116,7 @@ exports.getFeatures = function(req, res) {
                     res.json(err);
                 } else {
                     var resultset = {"type": "FeatureCollection", "features": []};
-                    
+
                     for (index = 0; index < result.rows.length; ++index) {
                         var item = {type: 'Feature', id: 'DBKFeature.gid--' + result.rows[index].feature.gid};
                         item.geometry = result.rows[index].feature.geometry;
