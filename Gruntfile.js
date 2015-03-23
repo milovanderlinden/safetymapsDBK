@@ -1,15 +1,6 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        nodeunit: {
-            all: ['test/*_test.js'],
-            options: {
-                reporter: 'junit',
-                reporterOptions: {
-                    output: 'test'
-                }
-            }
-        },
         copy: {
             main: {
                 files:
@@ -17,7 +8,31 @@ module.exports = function (grunt) {
                             {
                                 cwd: 'public/images',
                                 src: ['**'],
-                                dest: 'build/public/images',
+                                dest: 'build/images',
+                                expand: true
+                            },
+                            {
+                                cwd: 'public/js',
+                                src: ['dbk.min.js'],
+                                dest: 'build/js',
+                                expand: true
+                            },
+                            {
+                                cwd: 'public/css',
+                                src: ['dbk.min.css'],
+                                dest: 'build/css',
+                                expand: true
+                            },
+                            {
+                                cwd: 'locales',
+                                src: ['**'],
+                                dest: 'build/locales',
+                                expand: true
+                            },
+                            {
+                                cwd: 'node_modules/i18next/lib/dep',
+                                src: ['i18next.js'],
+                                dest: 'build/i18next',
                                 expand: true
                             }
                         ]
@@ -25,14 +40,7 @@ module.exports = function (grunt) {
         },
         clean: {
             build: {
-                src: ['build']
-            }
-        },
-        less: {
-            dist: {
-                files: {
-                    'public/css/dbk.css': 'less/style.less'
-                }
+                src: ['build', 'public/js/dbk.min.js', 'public/css/dbk.min.css']
             }
         },
         uglify: {
@@ -45,12 +53,8 @@ module.exports = function (grunt) {
                             'dbkjsbuildinfo.RELEASEDATE = "<%= grunt.template.today("yyyy-mm-dd") %>";\n' +
                             'dbkjsbuildinfo.APPLICATION = "<%= pkg.name %>";\n' +
                             'dbkjsbuildinfo.REMARKS = "<%= pkg.description %>";\n'
-                    ,
-                    beautify: {
-                        width: 80,
-                        beautify: true
-                    }
                 },
+               
                 files: {'public/js/dbk.min.js': [
                         'public/js/libs/jquery.pagination.js',
                         'public/js/libs/jquery.drags.js',
@@ -100,29 +104,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-nodeunit');
-    grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.registerTask(
-            'build',
-            'Compiles all of the assets and copies the files to the build directory.',
-            ['clean', 'copy', 'cssmin', 'uglify']
-            );
-    grunt.registerTask('default', ['less', 'cssmin', 'nodeunit']);
-    grunt.registerTask('exportdbk', 'Export all DBK objects to json', function () {
-        global.conf = require('nconf');
-        global.conf.argv().env();
-        global.conf.file({file: 'config.json'});
-
-        // Force task into async mode and grab a handle to the "done" function.
-        var done = this.async();
-        // Run some sync stuff.
-        grunt.log.writeln('Processing task...');
-        // And some async stuff.
-        setTimeout(function () {
-            grunt.log.writeln('All done!');
-            done();
-        }, 1000);
-    });
+    grunt.registerTask('default', ['clean', 'cssmin', 'uglify', 'copy']);
 };
 

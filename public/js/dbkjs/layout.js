@@ -67,12 +67,17 @@ dbkjs.layout = {
             dbkjs.redrawScaledLayers();
         });
 
-        var dbkjsbuildinfo = dbkjsbuildinfo || {};
-        var _relversion = dbkjsbuildinfo.VERSION || 'Development';
-        var _relapp = dbkjsbuildinfo.APPLICATION || 'Opendispatcher';
-        var _reldate = dbkjsbuildinfo.RELEASEDATE || 'N/A';
-        var _relremarks = dbkjsbuildinfo.REMARKS || 'The app is running in development mode';
-
+        var _relversion = 'Development';
+        var _relapp = 'Opendispatcher';
+        var _reldate = 'N/A';
+        var _relremarks = 'The app is running in development mode';
+        
+        if (window.dbkjsbuildinfo) {
+            _relversion = dbkjsbuildinfo.VERSION || 'Development';
+            _relapp = dbkjsbuildinfo.APPLICATION || 'Opendispatcher';
+            _reldate = dbkjsbuildinfo.RELEASEDATE || 'N/A';
+            _relremarks = dbkjsbuildinfo.REMARKS || 'The app is running in development mode';
+        }
 
 
         $(parent).append(

@@ -1,45 +1,54 @@
 {
-  "name": "safetymapsdbk",
-  "description": "Applicatie voor de digitale bereikbaarheidskaart",
-  "version": "3.0-BETA",
-  "license": "GPL-3.0+",
-  "author": {
-    "name": "Milo van der Linden",
-    "email": "milo@dogodigi.net",
-    "url": "http://www.dogodigi.net/"
-  },
-  "private": true,
-  "scripts": {
-    "start": "grunt build && node index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/opengeogroep/safetymapsDBK.git"
-  },
-  "dependencies": {
-    "express": "3.5.0",
-    "nodemailer": "*",
-    "i18next": "*",
-    "less-middleware": "<2.0.0",
-    "jade": "*",
-    "nconf": "*",
-    "any-db": "*",
-    "any-db-postgres": "*",
-    "pg": "*",
-    "request": "*",
-    "uglify-js": "*",
-    "clean-css": "*"
-  },
-  "devDependencies": {
-    "db-migrate": "^0.7.1",
-    "grunt": "^0.4.5",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-cssmin": "^0.10.0",
-    "grunt-contrib-less": "^0.12.0",
-    "grunt-contrib-nodeunit": "^0.4.1",
-    "grunt-contrib-uglify": "^0.8.0",
-    "nodeunit-express": "0.0.1",
-    "sqlite3": "^3.0.2"
-  }
+    "name": "safetymapsdbk",
+    "description": "Applicatie voor de digitale bereikbaarheidskaart",
+    "version": "3.0.0-beta.0",
+    "license": "GPL-3.0+",
+    "author": {
+        "name": "Milo van der Linden",
+        "email": "milo@dogodigi.net",
+        "url": "http://www.dogodigi.net/"
+    },
+    "contributors": [
+        {
+            "name": "Matthijs Laan",
+            "email": "matthijslaan@b3partners.nl"
+        },
+        {
+            "name": "Eddy Scheper",
+            "email": "eddy.scheper@aris.nl"
+        },
+        {
+            "name": "Joost Vermeulen",
+            "email": "j.vermeulen@falck.nl"
+        }
+    ],
+    "private": true,
+    "scripts": {
+        "start": "grunt && node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/opengeogroep/safetymapsDBK.git"
+    },
+    "dependencies": {
+        "express": "3.5.0",
+        "nodemailer": "*",
+        "i18next": "*",
+        "jade": "*",
+        "nconf": "*",
+        "any-db": "*",
+        "any-db-postgres": "*",
+        "pg": "*",
+        "request": "*",
+        "uglify-js": "*",
+        "clean-css": "*"
+    },
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-contrib-clean": "^0.6.0",
+        "grunt-contrib-copy": "^0.8.0",
+        "grunt-contrib-cssmin": "^0.10.0",
+        "grunt-contrib-uglify": "^0.8.0",
+        "nodeunit-express": "0.0.1"
+    }
 }
