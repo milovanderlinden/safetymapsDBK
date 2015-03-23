@@ -36,8 +36,6 @@ dbkjs.modules.print = {
         );
 
         $('#btn_print').click(function() {
-            //$('#printpanel').modal();
-            //_obj.printdirect(dbkjs.map, 2, options);
             _obj.doPrint();
         });
     },
@@ -191,6 +189,7 @@ dbkjs.modules.print = {
                 testObject.pages[0].center = [center.lon, center.lat];
                 testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
                 testObject.pages[0].rotation = 0;
+                //@TODO: show a square that the user can resize and rotate and create a minimalistic printing dialog
                 dbkjs.modules.print.printdirect(dbkjs.map, 
                     testObject.pages, 
                     testObject.options);
