@@ -265,7 +265,7 @@ dbkjs.modules.print = {
         layers.splice(a,1);
         layers.unshift(map.baseLayer);
         $.each(layers, function(layer_idx, layer) {
-            if (layer.name !== null && "Feature,feature_sketch,BAG".indexOf(layer.name) === -1) {
+            if (layer.name !== null && "Feature,feature_sketch".indexOf(layer.name) === -1) {
                 if (
                         //layer !== pagesLayer && 
                         layer.getVisibility() === true) {
