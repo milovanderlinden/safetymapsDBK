@@ -91,11 +91,6 @@ app.configure(function () {
     app.set('view engine', 'jade');
     app.locals.pretty = true;
     app.use(express.favicon(__dirname + '/public/images/favicon.ico', {maxAge: 25920000000}));
-    app.use(require('less-middleware')(path.join(__dirname, 'less'), {
-        dest: __dirname + '/public',
-        prefix: '/public',
-        debug: true
-    }));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use('/locales', express.static(__dirname + '/locales'));
