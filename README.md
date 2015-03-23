@@ -33,6 +33,6 @@ Maak een config.json bestand aan.
 
 start de applicatie in "development mode":
 
-    node app.js
+    npm start
 
 Ga met een browser naar [http://localhost:3000](http://localhost:3000) als het goed is is de applicatie nu gestart.
