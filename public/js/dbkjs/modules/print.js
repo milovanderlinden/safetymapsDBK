@@ -23,193 +23,211 @@ window.dbkjs = dbkjs;
 
 dbkjs.modules.print = {
     id: 'dbk.modules.print',
-    register: function(options) {
+    register: function (options) {
         var _obj = dbkjs.modules.print;
         _obj.printDialog('#printpanel_b');
         _obj.namespace = options.namespace || _obj.namespace;
         _obj.url = options.url || _obj.url;
         _obj.visibility = options.visible || _obj.visibility;
         $('#btngrp_3').append(
-            '<a id="btn_print" class="btn btn-default navbar-btn" href="#" title="' + 
-            i18n.t('app.print') + 
-            '"><i class="fa fa-print"></i></a>'
-        );
+                '<a id="btn_print" class="btn btn-default navbar-btn" href="#" title="' +
+                i18n.t('app.print') +
+                '"><i class="fa fa-print"></i></a>'
+                );
 
-        $('#btn_print').click(function() {
+        $('#btn_print').click(function () {
+//            polyOptions = {sides: 4};
+//            polygonControl = new OpenLayers.Control.DrawFeature(_obj.layer,
+//                    OpenLayers.Handler.RegularPolygon,
+//                    {handlerOptions: polyOptions});
+//
+//            dbkjs.map.addControl(polygonControl);
+//            function setOptions(options) {
+//                polygonControl.handler.setOptions(options);
+//            }
+//            function setSize(fraction) {
+//                var radius = fraction * dbkjs.map.getExtent().getHeight();
+//                polygonControl.handler.setOptions({radius: radius,
+//                    angle: 0});
+//            }
+//            polygonControl.activate();
             _obj.doPrint();
         });
+        this.layer = new OpenLayers.Layer.Vector('print');
+        dbkjs.map.addLayer(this.layer);
     },
-    doPrint: function(){
+    doPrint: function () {
         if (!dbkjs.util.isJsonNull(dbkjs.options.dbk) && dbkjs.options.dbk !== 0) {
-                var currentFeature = dbkjs.options.feature;
-                var testObject = {
-                    "options": {
-                        "units": "m",
-                        "srs": "EPSG:28992",
-                        "layout": "A3 Landscape",
-                        "dpi": 150,
-                        "mapTitle": dbkjs.options.organisation.title,
-                        "titlepage": true
-                    },
-                    "pages": [{}]
-                };
-                //add the features porperties
-                $.extend(testObject.options, currentFeature);
-                testObject.options.informatie = {};
-                testObject.options.informatie.columns = ["soort", "tekst"];
-                testObject.options.informatie.data = [];
-                //remove unwanted stuff if available
-                if(currentFeature.adres){
-                    if (currentFeature.adres.length > 0) {
-                        var adr_str = '';
-                        $.each(currentFeature.adres, function(adr_index, adr) {
-                            adr_str += adr.openbareRuimteNaam + ' ' + adr.huisnummer + 
-                                adr.huisnummertoevoeging + adr.huisletter + '\n' + 
+            var currentFeature = dbkjs.options.feature;
+            var testObject = {
+                "options": {
+                    "units": "m",
+                    "srs": "EPSG:28992",
+                    "layout": "A3 Landscape",
+                    "dpi": 150,
+                    "mapTitle": dbkjs.options.organisation.title,
+                    "titlepage": true
+                },
+                "pages": [{}]
+            };
+            //add the features porperties
+            $.extend(testObject.options, currentFeature);
+            testObject.options.informatie = {};
+            testObject.options.informatie.columns = ["soort", "tekst"];
+            testObject.options.informatie.data = [];
+            //remove unwanted stuff if available
+            if (currentFeature.adres) {
+                if (currentFeature.adres.length > 0) {
+                    var adr_str = '';
+                    $.each(currentFeature.adres, function (adr_index, adr) {
+                        adr_str += adr.openbareRuimteNaam + ' ' + adr.huisnummer +
+                                adr.huisnummertoevoeging + adr.huisletter + '\n' +
                                 adr.postcode + ' ' + adr.woonplaatsNaam + ' ' + adr.gemeenteNaam +
                                 '\n\n';
-                        });
-                        testObject.options.adres = adr_str;
-                    }
+                    });
+                    testObject.options.adres = adr_str;
                 }
-                $.each(testObject.options, function(op_idx, op_val){
-                    if (dbkjs.util.isJsonNull(op_val)){
-                        delete testObject.options[op_idx];
+            }
+            $.each(testObject.options, function (op_idx, op_val) {
+                if (dbkjs.util.isJsonNull(op_val)) {
+                    delete testObject.options[op_idx];
+                }
+            });
+            if (currentFeature.bijzonderheid) {
+                testObject.options.bijzonderheid = {};
+                testObject.options.bijzonderheid.columns = ["soort", "tekst"];
+                testObject.options.bijzonderheid.data = [];
+                var adr_str = '';
+                var set = {
+                    "Algemeen": '',
+                    "Preparatie": '',
+                    "Preventie": '',
+                    "Repressie": ''
+                };
+                $.each(currentFeature.bijzonderheid, function (adr_index, adr) {
+                    set[adr.soort] += '' + adr.tekst + '\n';
+                    //adr_str += adr.soort + ': ' + adr.tekst + '\n\n';
+                });
+                if (set.Algemeen !== '') {
+                    testObject.options.bijzonderheid.data.push({"soort": "Algemeen", "tekst": set.Algemeen});
+                }
+                if (set.Preparatie !== '') {
+                    testObject.options.bijzonderheid.data.push({"soort": "Preparatie", "tekst": set.Preparatie});
+                }
+                if (set.Preventie !== '') {
+                    testObject.options.bijzonderheid.data.push({"soort": "Preventie", "tekst": set.Preventie});
+                }
+                if (set.Repressie !== '') {
+                    testObject.options.bijzonderheid.data.push({"soort": "Repressie", "tekst": set.Repressie});
+                }
+            }
+            if (currentFeature.brandcompartiment) {
+                delete testObject.options.brandcompartiment;
+                $.each(currentFeature.brandcompartiment, function (adr_index, adr) {
+                    if (!dbkjs.util.isJsonNull(adr.aanvullendeInformatie)) {
+                        testObject.options.informatie.data.push({"soort": "Compartiment", "tekst": adr.typeScheiding + ": " + adr.aanvullendeInformatie});
                     }
                 });
-                if (currentFeature.bijzonderheid){
-                    testObject.options.bijzonderheid = {};
-                    testObject.options.bijzonderheid.columns = ["soort", "tekst"];
-                    testObject.options.bijzonderheid.data = [];
-                    var adr_str = '';
-                        var set = {
-                            "Algemeen":'',
-                            "Preparatie":'', 
-                            "Preventie":'', 
-                            "Repressie": ''
-                        };
-                        $.each(currentFeature.bijzonderheid, function(adr_index, adr) {
-                            set[adr.soort] += ''  + adr.tekst + '\n';
-                            //adr_str += adr.soort + ': ' + adr.tekst + '\n\n';
-                        });
-                        if(set.Algemeen !== ''){
-                            testObject.options.bijzonderheid.data.push({"soort": "Algemeen", "tekst": set.Algemeen});
-                        }
-                        if(set.Preparatie !== ''){
-                            testObject.options.bijzonderheid.data.push({"soort": "Preparatie", "tekst": set.Preparatie});
-                        }
-                        if(set.Preventie !== ''){
-                            testObject.options.bijzonderheid.data.push({"soort": "Preventie", "tekst": set.Preventie});
-                        }
-                        if(set.Repressie !== ''){
-                            testObject.options.bijzonderheid.data.push({"soort": "Repressie", "tekst": set.Repressie});
-                        }
-                }
-                if (currentFeature.brandcompartiment){
-                    delete testObject.options.brandcompartiment;
-                    $.each(currentFeature.brandcompartiment, function(adr_index, adr) {
-                        if(!dbkjs.util.isJsonNull(adr.aanvullendeInformatie)){
-                            testObject.options.informatie.data.push({"soort": "Compartiment", "tekst": adr.typeScheiding + ": " +adr.aanvullendeInformatie});
-                        }
-                    });
-                }
-                if (currentFeature.brandweervoorziening){
-                    delete testObject.options.brandweervoorziening;
-                    $.each(currentFeature.brandweervoorziening, function(adr_index, adr) {
-                        if(!dbkjs.util.isJsonNull(adr.aanvullendeInformatie)){
-                            testObject.options.informatie.data.push({"soort": "Voorziening", "tekst": adr.naamVoorziening + ": " + adr.aanvullendeInformatie});
-                        }
-                    });
-                }
-
-                if(currentFeature.contact){
-                    if (currentFeature.contact.length > 0) {
-                        var adr_str = '';
-                        $.each(currentFeature.contact, function(adr_index, adr) {
-                            adr_str += adr.naam + '\n' + 
-                                adr.telefoonnummer + '\n' + 
-                                '('  + adr.functie + ')\n\n';
-                        });
-                        testObject.options.contact = adr_str;
-                    }
-                }
-                if (currentFeature.foto){
-                    delete testObject.options.foto;
-                }
-                if (currentFeature.hulplijn){
-                    delete testObject.options.hulplijn;
-                }
-                if (currentFeature.pandgeometrie){
-                    delete testObject.options.pandgeometrie;
-                }
-                if (currentFeature.tekstobject){
-                    delete testObject.options.tekstobject;
-                }
-                if (currentFeature.toegangterrein){
-                    delete testObject.options.toegangterrein;
-                }
-                if (currentFeature.verdiepingen){
-                    delete testObject.options.verdiepingen;
-                }
-                
-                if(currentFeature.verblijf){
-                    if (currentFeature.verblijf.length > 0) {
-                        testObject.options.verblijf = {};
-                        testObject.options.verblijf.columns = ["groep", "aantal", "begin", "eind", "nietzelfredzaam"];
-                        testObject.options.verblijf.data = [];
-                        $.each(currentFeature.verblijf, function(adr_index, adr) {
-                            testObject.options.verblijf.data.push(adr);
-                        });
-                    }
-                }
-                
-                if (currentFeature.images) {
-                    delete testObject.options.images;
-                    if (currentFeature.images.length > 0) {
-                        $.each(currentFeature.images, function(img_index, img) {
-                            testObject.options["image" + (img_index + 1)] = encodeURI(img);
-                        });
-                    }
-                }
-                if (currentFeature.gevaarlijkestof) {
-                    if (currentFeature.gevaarlijkestof.length > 0) {
-                        testObject.options.gevaarlijkestof = {};
-                        testObject.options.gevaarlijkestof.columns = ["icon", "gevaarsindicatienummer", "UNnummer", "naamStof", "hoeveelheid", "aanvullendeInformatie", "symboolCode"];
-                        testObject.options.gevaarlijkestof.data = [];
-                        $.each(currentFeature.gevaarlijkestof, function(adr_index, adr) {
-                            adr.icon = dbkjs.basePath + 'images/eughs/' + adr.symboolCode + '.png';
-                            testObject.options.gevaarlijkestof.data.push(adr);
-                        });
-                    }
-                }
-                if(testObject.options.informatie.data.length === 0){
-                    delete testObject.options.informatie;
-                }
-                
-                var center = dbkjs.map.getCenter();
-                testObject.pages[0].center = [center.lon, center.lat];
-                testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
-                testObject.pages[0].rotation = 0;
-                //@TODO: show a square that the user can resize and rotate and create a minimalistic printing dialog
-                dbkjs.modules.print.printdirect(dbkjs.map, 
-                    testObject.pages, 
-                    testObject.options);
-            } else {
-                var testObject = {
-                    "options": {
-                        "units": "m",
-                        "srs": "EPSG:28992",
-                        "layout": "A3 Landscape",
-                        "dpi": 150,
-                        "mapTitle": dbkjs.options.organisation.title
-                    },
-                    "pages": [{}]
-                };
-                var center = dbkjs.map.getCenter();
-                testObject.pages[0].center = [center.lon, center.lat];
-                testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
-                testObject.pages[0].rotation = 0;
-                dbkjs.modules.print.printdirect(dbkjs.map, testObject.pages, testObject.options);                
             }
+            if (currentFeature.brandweervoorziening) {
+                delete testObject.options.brandweervoorziening;
+                $.each(currentFeature.brandweervoorziening, function (adr_index, adr) {
+                    if (!dbkjs.util.isJsonNull(adr.aanvullendeInformatie)) {
+                        testObject.options.informatie.data.push({"soort": "Voorziening", "tekst": adr.naamVoorziening + ": " + adr.aanvullendeInformatie});
+                    }
+                });
+            }
+
+            if (currentFeature.contact) {
+                if (currentFeature.contact.length > 0) {
+                    var adr_str = '';
+                    $.each(currentFeature.contact, function (adr_index, adr) {
+                        adr_str += adr.naam + '\n' +
+                                adr.telefoonnummer + '\n' +
+                                '(' + adr.functie + ')\n\n';
+                    });
+                    testObject.options.contact = adr_str;
+                }
+            }
+            if (currentFeature.foto) {
+                delete testObject.options.foto;
+            }
+            if (currentFeature.hulplijn) {
+                delete testObject.options.hulplijn;
+            }
+            if (currentFeature.pandgeometrie) {
+                delete testObject.options.pandgeometrie;
+            }
+            if (currentFeature.tekstobject) {
+                delete testObject.options.tekstobject;
+            }
+            if (currentFeature.toegangterrein) {
+                delete testObject.options.toegangterrein;
+            }
+            if (currentFeature.verdiepingen) {
+                delete testObject.options.verdiepingen;
+            }
+
+            if (currentFeature.verblijf) {
+                if (currentFeature.verblijf.length > 0) {
+                    testObject.options.verblijf = {};
+                    testObject.options.verblijf.columns = ["groep", "aantal", "begin", "eind", "nietzelfredzaam"];
+                    testObject.options.verblijf.data = [];
+                    $.each(currentFeature.verblijf, function (adr_index, adr) {
+                        testObject.options.verblijf.data.push(adr);
+                    });
+                }
+            }
+
+            if (currentFeature.images) {
+                delete testObject.options.images;
+                if (currentFeature.images.length > 0) {
+                    $.each(currentFeature.images, function (img_index, img) {
+                        testObject.options["image" + (img_index + 1)] = encodeURI(img);
+                    });
+                }
+            }
+            if (currentFeature.gevaarlijkestof) {
+                if (currentFeature.gevaarlijkestof.length > 0) {
+                    testObject.options.gevaarlijkestof = {};
+                    testObject.options.gevaarlijkestof.columns = ["icon", "gevaarsindicatienummer", "UNnummer", "naamStof", "hoeveelheid", "aanvullendeInformatie", "symboolCode"];
+                    testObject.options.gevaarlijkestof.data = [];
+                    $.each(currentFeature.gevaarlijkestof, function (adr_index, adr) {
+                        adr.icon = dbkjs.basePath + 'images/eughs/' + adr.symboolCode + '.png';
+                        testObject.options.gevaarlijkestof.data.push(adr);
+                    });
+                }
+            }
+            if (testObject.options.informatie.data.length === 0) {
+                delete testObject.options.informatie;
+            }
+
+            var center = dbkjs.map.getCenter();
+            testObject.pages[0].center = [center.lon, center.lat];
+            //testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
+            testObject.pages[0].bbox = Math.ceil(dbkjs.map.getScale());
+            testObject.pages[0].rotation = 0;
+            //@TODO: show a square that the user can resize and rotate and create a minimalistic printing dialog
+            dbkjs.modules.print.printdirect(dbkjs.map,
+                    testObject.pages,
+                    testObject.options);
+        } else {
+            var testObject = {
+                "options": {
+                    "units": "m",
+                    "srs": "EPSG:28992",
+                    "layout": "A3 Landscape",
+                    "dpi": 150,
+                    "mapTitle": dbkjs.options.organisation.title
+                },
+                "pages": [{}]
+            };
+            var center = dbkjs.map.getCenter();
+            testObject.pages[0].center = [center.lon, center.lat];
+            testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
+            testObject.pages[0].rotation = 0;
+            dbkjs.modules.print.printdirect(dbkjs.map, testObject.pages, testObject.options);
+        }
     },
     capabilities: null,
     method: "POST",
@@ -221,14 +239,14 @@ dbkjs.modules.print = {
     layout: null,
     encoding: document.charset || document.characterSet || "UTF-8",
     timeout: 30000,
-    setLayout: function(layout) {
+    setLayout: function (layout) {
         this.layout = layout;
     },
-    setDpi: function(dpi) {
+    setDpi: function (dpi) {
         this.dpi = dpi;
     },
-    printdirect: function(map, pages, options) {
-        dbkjs.modules.print.loadCapabilities(function(capabilities) {
+    printdirect: function (map, pages, options) {
+        dbkjs.modules.print.loadCapabilities(function (capabilities) {
             dbkjs.modules.print.setLayout({
                 name: options.layout,
                 rotation: true,
@@ -241,7 +259,7 @@ dbkjs.modules.print = {
             dbkjs.modules.print.print(map, pages, options);
         });
     },
-    print: function(map, pages, options) {
+    print: function (map, pages, options) {
         var _obj = dbkjs.modules.print;
         pages = pages instanceof Array ? pages : [pages];
         options = options || {};
@@ -261,10 +279,10 @@ dbkjs.modules.print = {
         var layers = map.layers.concat(); //concat results in a new array
         //layers.remove(map.baseLayer);
         var a = layers.indexOf(map.baseLayer);
-        layers.splice(a,1);
+        layers.splice(a, 1);
         layers.unshift(map.baseLayer);
-        $.each(layers, function(layer_idx, layer) {
-            if (layer.name !== null && "Feature,feature_sketch".indexOf(layer.name) === -1) {
+        $.each(layers, function (layer_idx, layer) {
+            if (layer.name !== null && "Feature,feature_sketch,print".indexOf(layer.name) === -1) {
                 if (
                         //layer !== pagesLayer && 
                         layer.getVisibility() === true) {
@@ -276,19 +294,19 @@ dbkjs.modules.print = {
         jsonData.layers = encodedLayers;
 
         var encodedPages = [];
-        $.each(pages, function(page_idx, page) {
+        $.each(pages, function (page_idx, page) {
             encodedPages.push(
                     $.extend(page.customParams, {
-                center: [page.center[0], page.center[1]],
-                scale: page.scale,
-                rotation: page.rotation
-            })
+                        center: [page.center[0], page.center[1]],
+                        scale: page.scale,
+                        rotation: page.rotation
+                    })
                     );
         });
         jsonData.pages = encodedPages;
         var encodedOverviewLayers = [];
         if (options.overview) {
-            $.each(options.overview.layers, function(layer) {
+            $.each(options.overview.layers, function (layer) {
                 var enc = _obj.encodeLayer(layer);
                 enc && encodedOverviewLayers.push(enc);
             });
@@ -305,15 +323,15 @@ dbkjs.modules.print = {
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(jsonData),
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 _obj.download(response.getURL);
             },
-            error: function(response) {
+            error: function (response) {
                 alert(response.responseText);
             }
         });
     },
-    printDialog: function(parent) {
+    printDialog: function (parent) {
         var form = $('<form id="print-form" role="form"></form>');
         //form.append('<p class="bg-info">' + "Kies de juiste instellingen" + '</p>');
         var layoutgroup = $('<div class="form-group"></div>');
@@ -322,7 +340,7 @@ dbkjs.modules.print = {
         form.append(layoutgroup);
         $(parent).append(form);
     },
-    download: function(url) {
+    download: function (url) {
         var _obj = dbkjs.modules.print;
         // Er zit een bug in de manier waarop de PDF wordt aangeboden. Deze houdt geen rekening met proxies die serverside zijn ingesteld
         // De oplossing is om de bestandsnaam uit de URL te halen en de juiste relatieve URL er van te maken.
@@ -332,7 +350,7 @@ dbkjs.modules.print = {
 
         window.open("/print/pdf/" + filename);
     },
-    loadCapabilities: function(callback) {
+    loadCapabilities: function (callback) {
         var _obj = dbkjs.modules.print;
         if (!_obj.url) {
             return;
@@ -342,13 +360,13 @@ dbkjs.modules.print = {
             url: url,
             type: "GET",
             data: "",
-            success: function(response) {
+            success: function (response) {
                 _obj.capabilities = response;
                 if (callback) {
                     callback.call();
                 }
             },
-            error: function(response) {
+            error: function (response) {
                 alert(response.responseText);
             }
         });
@@ -359,7 +377,7 @@ dbkjs.modules.print = {
      * @param {type} layer
      * @returns {dbkjs.modules.print.encodeLayer.encLayer|@exp;encLayer@pro;type}
      */
-    encodeLayer: function(layer) {
+    encodeLayer: function (layer) {
         var _obj = dbkjs.modules.print;
         var encLayer;
         for (var c in _obj.encoders.layers) {
@@ -374,7 +392,7 @@ dbkjs.modules.print = {
     },
     encoders: {
         "layers": {
-            "Layer": function(layer) {
+            "Layer": function (layer) {
                 var enc = {};
                 if (layer.options && layer.options.maxScale) {
                     enc.minScaleDenominator = layer.options.maxScale;
@@ -384,7 +402,7 @@ dbkjs.modules.print = {
                 }
                 return enc;
             },
-            "WMS": function(layer) {
+            "WMS": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.HTTPRequest.call(dbkjs.modules.print, layer);
                 enc.singleTile = layer.singleTile;
                 $.extend(enc, {
@@ -407,7 +425,7 @@ dbkjs.modules.print = {
                 }
                 return enc;
             },
-            "OSM": function(layer) {
+            "OSM": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.TileCache.call(dbkjs.modules.print, layer);
                 return $.extend(enc, {
                     type: 'OSM',
@@ -415,7 +433,7 @@ dbkjs.modules.print = {
                     extension: "png"
                 });
             },
-            "TMS": function(layer) {
+            "TMS": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.TileCache.call(dbkjs.modules.print, layer);
                 return $.extend(enc, {
                     type: 'TMS',
@@ -423,7 +441,7 @@ dbkjs.modules.print = {
                     "tileOrigin": {"x": -285401.920, "y": 22598.080}
                 });
             },
-            "TileCache": function(layer) {
+            "TileCache": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.HTTPRequest.call(dbkjs.modules.print, layer);
                 return $.extend(enc, {
                     type: 'TileCache',
@@ -434,7 +452,7 @@ dbkjs.modules.print = {
                     resolutions: layer.serverResolutions || layer.resolutions
                 });
             },
-            "WMTS": function(layer) {
+            "WMTS": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.HTTPRequest.call(dbkjs.modules.print, layer);
                 enc = $.extend(enc, {
                     type: 'WMTS',
@@ -451,7 +469,7 @@ dbkjs.modules.print = {
                         enc.format = layer.format;
                     }
                     enc.matrixIds = [];
-                    $.each(layer.matrixIds, function(matrixId_idx, matrixId) {
+                    $.each(layer.matrixIds, function (matrixId_idx, matrixId) {
                         enc.matrixIds.push({
                             identifier: matrixId.identifier,
                             matrixSize: [matrixId.matrixWidth, matrixId.matrixHeight],
@@ -473,7 +491,7 @@ dbkjs.modules.print = {
                     });
                 }
             },
-            "KaMapCache": function(layer) {
+            "KaMapCache": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.KaMap.call(dbkjs.modules.print, layer);
                 return $.extend(enc, {
                     type: 'KaMapCache',
@@ -483,7 +501,7 @@ dbkjs.modules.print = {
                     metaTileHeight: layer.params['metaTileSize']['h']
                 });
             },
-            "KaMap": function(layer) {
+            "KaMap": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.HTTPRequest.call(dbkjs.modules.print, layer);
                 return $.extend(enc, {
                     type: 'KaMap',
@@ -496,7 +514,7 @@ dbkjs.modules.print = {
                     resolutions: layer.serverResolutions || layer.resolutions
                 });
             },
-            "HTTPRequest": function(layer) {
+            "HTTPRequest": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.Layer.call(dbkjs.modules.print, layer);
                 return $.extend(enc, {
                     baseURL: dbkjs.modules.print.getAbsoluteUrl(layer.url instanceof Array ?
@@ -504,7 +522,7 @@ dbkjs.modules.print = {
                     opacity: (layer.opacity !== null) ? layer.opacity : 1.0
                 });
             },
-            "Image": function(layer) {
+            "Image": function (layer) {
                 var enc = dbkjs.modules.print.encoders.layers.Layer.call(dbkjs.modules.print, layer);
                 return $.extend(enc, {
                     type: 'Image',
@@ -515,7 +533,7 @@ dbkjs.modules.print = {
                     name: layer.name
                 });
             },
-            "Vector": function(layer) {
+            "Vector": function (layer) {
                 if (!layer.features.length) {
                     return;
                 }
@@ -532,7 +550,7 @@ dbkjs.modules.print = {
                     feature = features[i];
                     style = feature.style || layer.style ||
                             layer.styleMap.createSymbolizer(feature,
-                            feature.renderIntent);
+                                    feature.renderIntent);
 
                     // don't send unvisible features
                     if (style.display === 'none') {
@@ -572,7 +590,7 @@ dbkjs.modules.print = {
                     opacity: (layer.opacity !== null) ? layer.opacity : 1.0
                 });
             },
-            "Markers": function(layer) {
+            "Markers": function (layer) {
                 var features = [];
                 for (var i = 0, len = layer.markers.length; i < len; i++) {
                     var marker = layer.markers[i];
@@ -591,7 +609,7 @@ dbkjs.modules.print = {
             }
         }
     },
-    getAbsoluteUrl: function(url) {
+    getAbsoluteUrl: function (url) {
         if ($.browser.safari) {
             url = url.replace(/{/g, '%7B');
             url = url.replace(/}/g, '%7D');

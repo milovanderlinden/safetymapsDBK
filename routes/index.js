@@ -99,6 +99,7 @@ function setup(app) {
     app.post('/api/annotation', dbk.postAnnotation);
     app.get('/api/gebied/:id.json', dbk.getGebied);
     app.get('/api/features.json', dbk.getFeatures);
+    app.get('/api/bag/info', bag.getVersion);
     app.get('/api/bag/adres/:id', bag.getAdres);
     app.get('/api/bag/panden/:id', bag.getPanden);
     app.get('/api/autocomplete/:searchphrase', bag.autoComplete);

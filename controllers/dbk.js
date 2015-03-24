@@ -21,7 +21,6 @@
 exports.getOrganisation = function(req, res) {
     //where identificatie = 1369659645
     if (req.query) {
-        id = req.params.id;
         srid = req.query.srid;
         if(!srid){
             srid = 4326;

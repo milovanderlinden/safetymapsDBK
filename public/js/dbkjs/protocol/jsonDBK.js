@@ -588,7 +588,7 @@ dbkjs.protocol.jsonDBK = {
     constructOmsdetail: function(feature) {
         var _obj = dbkjs.protocol.jsonDBK;
         var id = 'collapse_omsdetail_' + feature.identificatie;
-        if (feature.omsdetails) {
+        if (feature.oms_details) {
             var active_tab = _obj.active_tab === 'gevaarlijkestof' ?  'active' : '';
             var omsdetail_div = $('<div class="tab-pane" ' + active_tab + ' id="' + id + '"></div>');
             var omsdetail_table_div = $('<div class="table-responsive"></div>');
@@ -597,7 +597,7 @@ dbkjs.protocol.jsonDBK = {
                     i18n.t('omsdetail.name') + '</th><th>' +
                     i18n.t('omsdetail.mobile') + '</th><th>' +
                     i18n.t('omsdetail.telephone') + '</th></tr>');
-            $.each(omsdetail, function(omsdetail_index, waarde) {
+            $.each(feature.oms_details, function(omsdetail_index, waarde) {
                 omsdetail_table.append(
                         '<tr>' +
                         '<td>Algemeen</td>' +
