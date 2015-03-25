@@ -35,4 +35,12 @@ start de applicatie in "development mode":
 
     npm start
 
+start de applicatie in "production mode":
+
+    export NODE_ENV=production && npm start
+
+Of met forever:
+
+    NODE_ENV=production /usr/bin/forever start -c "npm start" /home/webdev/nodeapp/
+
 Ga met een browser naar [http://localhost:3000](http://localhost:3000) als het goed is is de applicatie nu gestart.
