@@ -79,7 +79,6 @@ dbkjs.layout = {
             _relremarks = dbkjsbuildinfo.REMARKS || 'The app is running in development mode';
         }
         $.getJSON(dbkjs.dataPath + 'bag/info').done(function(data) {
-            console.log(data);
             if(data[0].bag_update){
                 $(parent).append(
                 '<p><hr/><strong>BAG datum</strong> ' + data[0].bag_update + '</p>'
