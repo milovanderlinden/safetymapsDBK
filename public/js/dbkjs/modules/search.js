@@ -148,11 +148,11 @@ dbkjs.modules.search = {
                 {},
                 {
                     graphicName: 'circle',
-                    fillColor: '#ff0000',
-                    strokeColor: '#ff0000',
+                    fillColor: '#BE81F7',
+                    strokeColor: '#BE81F7',
                     strokeWidth: 3,
-                    fillOpacity: 0.1,
-                    pointRadius: 7
+                    fillOpacity: 0.9,
+                    pointRadius: 10
                 }
             ),
             circle
@@ -175,6 +175,7 @@ dbkjs.modules.search = {
             if (count>16) {
                 clearInterval(window.resizeInterval);
                 _obj.layer.removeFeatures(feature,{silent: true});
+                _obj.layer.destroyFeatures();
             } else {
                 var interval = radius * 0.03;
                 var ratio = interval/radius;
@@ -190,6 +191,7 @@ dbkjs.modules.search = {
                 }
                 if(count>16){
                     _obj.layer.removeFeatures(feature,{silent: true});
+                    _obj.layer.destroyFeatures();
                 } else {
                     feature.geometry.resize(1+ratio, point);
                     _obj.layer.drawFeature(feature);
