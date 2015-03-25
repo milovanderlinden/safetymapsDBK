@@ -57,6 +57,7 @@ dbkjs.modules.print = {
         dbkjs.map.addLayer(this.layer);
     },
     doPrint: function () {
+        dbkjs.util.alert('<i class="fa fa-spinner fa-spin"></i>', i18n.t('dialogs.print'), 'alert-warning');
         if (!dbkjs.util.isJsonNull(dbkjs.options.dbk) && dbkjs.options.dbk !== 0) {
             var currentFeature = dbkjs.options.feature;
             var testObject = {
@@ -204,8 +205,8 @@ dbkjs.modules.print = {
 
             var center = dbkjs.map.getCenter();
             testObject.pages[0].center = [center.lon, center.lat];
-            //testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
-            testObject.pages[0].bbox = Math.ceil(dbkjs.map.getScale());
+            testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
+            //testObject.pages[0].bbox = Math.ceil(dbkjs.map.getScale());
             testObject.pages[0].rotation = 0;
             //@TODO: show a square that the user can resize and rotate and create a minimalistic printing dialog
             dbkjs.modules.print.printdirect(dbkjs.map,
@@ -324,10 +325,18 @@ dbkjs.modules.print = {
             data: JSON.stringify(jsonData),
             dataType: "json",
             success: function (response) {
-                _obj.download(response.getURL);
+                var url = response.getURL;
+                var url_arr = url.split('/');
+                var filename = url_arr[url_arr.length - 1];
+                var newURL = "/print/pdf/" + filename;
+                dbkjs.util.alert('<a href="' + newURL + '"><i class="fa fa-file-pdf-o fa-2x"></i></a> ', i18n.t('dialogs.printready') + ' ' +
+                        '<a href="' + newURL + '">' + 
+                        i18n.t('dialogs.downloadpdf') + '</a>.', 'alert-success');
+                //_obj.download(response.getURL);
             },
             error: function (response) {
-                alert(response.responseText);
+                dbkjs.util.alert('<i class="fa fa-warning"></i>', i18n.t('dialogs.printerror') , 'alert-error');
+                //alert(response.responseText);
             }
         });
     },

@@ -72,7 +72,11 @@
         "invalidImage": "dialogs.invalidImage",
         "layerNotFound": "dialogs.layerNotFound",
         "infoNotFound": "dialogs.infoNotFound",
-        "running": "dialogs.running"
+        "running": "dialogs.running",
+        "print": "Preparing print",
+        "printready": "Success",
+        "downloadpdf": "download pdf",
+        "printerror": "An error occured"
     },
     "care": {
         "managementinfo": "care.managementinfo",

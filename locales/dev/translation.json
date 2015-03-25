@@ -73,7 +73,11 @@
         "invalidImage": "dialogs.invalidImage",
         "layerNotFound": "dialogs.layerNotFound",
         "infoNotFound": "dialogs.infoNotFound",
-        "running": "dialogs.running"
+        "running": "dialogs.running",
+        "print": "dialogs.print",
+        "printready": "dialogs.printready",
+        "downloadpdf": "dialogs.downloadpdf",
+        "printerror": "dialogs.printerror"
     },
     "care": {
         "managementinfo": "care.managementinfo",
