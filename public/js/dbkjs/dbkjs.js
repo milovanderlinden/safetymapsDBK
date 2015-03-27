@@ -117,6 +117,7 @@ dbkjs.successAuth = function () {
             {
                 hover: true,
                 highlightOnly: true,
+                clickTolerance: 30,
                 renderIntent: "temporary"
             }
     );
@@ -127,6 +128,7 @@ dbkjs.successAuth = function () {
             [],
             {
                 clickout: true,
+                clickTolerance: 30,
                 toggle: true,
                 multiple: false
             }

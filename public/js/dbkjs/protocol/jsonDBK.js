@@ -872,7 +872,10 @@ dbkjs.protocol.jsonDBK = {
                     features.push(outFeature);
                    } else {
                     var myFeature = new OpenLayers.Feature.Vector(myline);
-                    myFeature.attributes = { "type" : myGeometry.typeScheiding};
+                    myFeature.attributes = { 
+                        "type" : myGeometry.typeScheiding,
+                        "informatie": myGeometry.aanvullendeInformatie,
+                    };
                     features.push(myFeature);
                 }
 
