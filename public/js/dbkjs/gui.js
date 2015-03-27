@@ -72,7 +72,7 @@ dbkjs.gui = {
     },
     // jsonDBK.js
     detailsPanelUpdateTitle: function(text) {
-        $('#vectorclickpanel_h').html('<span class="h4"><i class="fa fa-info-circle">&nbsp;' + text + '</span>');
+        $('#vectorclickpanel_h').html('<span class="h4"><i class="fa fa-info-circle"></i>&nbsp;' + text + '</span>');
         //$('#vectorclickpanel_h').html(text);
     },
     // jsonDBK.js
