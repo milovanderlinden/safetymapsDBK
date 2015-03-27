@@ -77,7 +77,11 @@
         "print": "Afdruk wordt voorbereid...",
         "printready": "Afdruk gereed voor",
         "downloadpdf": "download",
-        "printerror": "Afdruk mislukt"
+        "printerror": "Afdruk mislukt",
+        "bagbuildings": "Panden",
+        "bagselectedbuildings": "geselecteerd pand",
+        "bagvbuildings": "Verblijfsobject(en) in geselecteerd pand",
+        "bagdescription": "Toont de panden uit de BAG en geeft de mogelijkheid op een pand te klikken om vervolgens informatie te krijgen over de panden en verblijfsobjecten. Deze laag wordt direct betrokken bij PDOK."
     },
     "care": {
         "managementinfo": "Management informatie",
