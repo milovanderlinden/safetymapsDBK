@@ -26,7 +26,8 @@ var express = require('express'),
         path = require('path'),
         i18n = require('i18next'),
         anyDB = require('any-db'),
-        fs = require('fs');
+        fs = require('fs'),
+        compress = require('compression');;
 
 global.conf = require('nconf');
 // First consider commandline arguments and environment variables, respectively.
@@ -85,6 +86,7 @@ app.configure('production', function () {
 // Configuration
 app.configure(function () {
     app.set('port', process.env.PORT || global.conf.get('http:port'));
+    app.use(compress());  
     app.enable('trust proxy');
     app.use(i18n.handle);
     app.set('views', __dirname + '/views');

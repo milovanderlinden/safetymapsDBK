@@ -1,54 +1,53 @@
 {
-    "name": "safetymapsdbk",
-    "description": "Applicatie voor de digitale bereikbaarheidskaart",
-    "version": "3.0.0-beta.1",
-    "license": "GPL-3.0+",
-    "author": {
-        "name": "Milo van der Linden",
-        "email": "milo@dogodigi.net",
-        "url": "http://www.dogodigi.net/"
+  "name": "safetymapsdbk",
+  "description": "Applicatie voor de digitale bereikbaarheidskaart",
+  "version": "3.0.0-beta.1",
+  "license": "GPL-3.0+",
+  "author": {
+    "name": "Milo van der Linden",
+    "email": "milo@dogodigi.net",
+    "url": "http://www.dogodigi.net/"
+  },
+  "contributors": [
+    {
+      "name": "Matthijs Laan",
+      "email": "matthijslaan@b3partners.nl"
     },
-    "contributors": [
-        {
-            "name": "Matthijs Laan",
-            "email": "matthijslaan@b3partners.nl"
-        },
-        {
-            "name": "Eddy Scheper",
-            "email": "eddy.scheper@aris.nl"
-        },
-        {
-            "name": "Joost Vermeulen",
-            "email": "j.vermeulen@falck.nl"
-        }
-    ],
-    "private": true,
-    "scripts": {
-        "start": "grunt && node index.js"
+    {
+      "name": "Eddy Scheper",
+      "email": "eddy.scheper@aris.nl"
     },
-    "repository": {
-        "type": "git",
-        "url": "http://github.com/opengeogroep/safetymapsDBK.git"
-    },
-    "dependencies": {
-        "express": "3.5.0",
-        "nodemailer": "*",
-        "i18next": "*",
-        "jade": "*",
-        "nconf": "*",
-        "any-db": "*",
-        "any-db-postgres": "*",
-        "pg": "*",
-        "request": "*",
-        "uglify-js": "*",
-        "clean-css": "*",
-        "grunt": "^0.4.5",
-        "grunt-contrib-clean": "^0.6.0",
-        "grunt-contrib-copy": "^0.8.0",
-        "grunt-contrib-cssmin": "^0.10.0",
-        "grunt-contrib-uglify": "^0.8.0"
-    },
-    "devDependencies": {
- 
+    {
+      "name": "Joost Vermeulen",
+      "email": "j.vermeulen@falck.nl"
     }
+  ],
+  "private": true,
+  "scripts": {
+    "start": "grunt && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/opengeogroep/safetymapsDBK.git"
+  },
+  "dependencies": {
+    "any-db": "*",
+    "any-db-postgres": "*",
+    "clean-css": "*",
+    "compression": "^1.4.3",
+    "express": "3.5.0",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-cssmin": "^0.10.0",
+    "grunt-contrib-uglify": "^0.8.0",
+    "i18next": "*",
+    "jade": "*",
+    "nconf": "*",
+    "nodemailer": "*",
+    "pg": "*",
+    "request": "*",
+    "uglify-js": "*"
+  },
+  "devDependencies": {}
 }
