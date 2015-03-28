@@ -31,7 +31,7 @@ exports.getOrganisation = function(req, res) {
                 if(err) {
                     res.json(err);
                 } else {
-                    res.json(result.rows[0]);
+                    res.json(removeNulls(result.rows[0]));
                 }
                 return;
             }
@@ -72,7 +72,7 @@ exports.getObject = function(req, res) {
                 if(err) {
                     res.json(err);
                 } else {
-                    res.json(result.rows[0]);
+                    res.json(removeNulls(result.rows[0]));
                 }
                 return;
             }
@@ -94,7 +94,7 @@ exports.getGebied = function(req, res) {
                 if(err) {
                     res.json(err);
                 } else {
-                    res.json(result.rows[0]);
+                    res.json(removeNulls(result.rows[0]));
                 }
                 return;
             }
