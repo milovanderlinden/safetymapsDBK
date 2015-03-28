@@ -123,10 +123,23 @@ exports.getFeatures = function(req, res) {
                         delete item.properties.geometry;
                         resultset.features.push(item);
                     }
-                    res.json(resultset);
+                    res.json(removeNulls(resultset));
                 }
                 return;
             }
         );
     }
+};
+
+// Compact arrays with null entries; delete keys from objects with null value
+var removeNulls = function(data){
+  var y;
+  for (var x in data) {
+    y = data[x];
+    if (y==="null" || y===null || y==="" || typeof y === "undefined" || (y instanceof Object && Object.keys(y).length === 0)) {
+      delete data[x];
+    }
+    if (y instanceof Object) y = removeNulls(y);
+  }
+  return data;
 };
