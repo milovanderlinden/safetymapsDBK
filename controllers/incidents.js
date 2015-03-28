@@ -32,7 +32,7 @@ exports.getGroupByClasses = function(req, res) {
         global.pool.query(query_str,
             function(err, result){
                 if(err) {
-                    res.json(err);
+                    res.status(400).json(err);
                 } else {
                     res.json(result.rows);
                 }
@@ -90,7 +90,7 @@ exports.getGroupByClass2 = function(req, res) {
             global.pool.query(query_str,[c1],
                 function(err, result){
                     if(err) {
-                        res.json(err);
+                        res.status(400).json(err);
                     } else {
                         res.json(result.rows);
                     }
@@ -130,7 +130,7 @@ exports.getGroupByClass3 = function(req, res) {
             global.pool.query(query_str,[c2],
                 function(err, result){
                     if(err) {
-                        res.json(err);
+                        res.status(400).json(err);
                     } else {
                         res.json(result.rows);
                     }
@@ -142,7 +142,7 @@ exports.getGroupByClass3 = function(req, res) {
             global.pool.query(query_str,[c1,c2],
                 function(err, result){
                     if(err) {
-                        res.json(err);
+                        res.status(400).json(err);
                     } else {
                         res.json(result.rows);
                     }

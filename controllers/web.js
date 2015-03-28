@@ -79,7 +79,7 @@ getJSON = function(req, res) {
         global.pool.query(query_str, [id, srid],
             function(err, result) {
                 if (err) {
-                    res.json(err);
+                    res.status(400).json(err);
                 } else {
                     var resultset = {};
                     for (index = 0; index < result.rows.length; ++index) {

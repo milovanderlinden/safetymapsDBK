@@ -29,7 +29,7 @@ exports.getVersion = function (req, res) {
     global.bag.query(query_str, ['schema_creatie'],
             function (err, result) {
                 if (err) {
-                    res.json(err);
+                    res.status(400).json(err);
                 } else {
                     for (index = 0; index < result.rows.length; ++index) {
                     }
@@ -59,7 +59,7 @@ exports.getAdres = function (req, res) {
         global.bag.query(query_str, [id, srid],
                 function (err, result) {
                     if (err) {
-                        res.json(err);
+                        res.status(400).json(err);
                     } else {
                         for (index = 0; index < result.rows.length; ++index) {
                             var geometry = JSON.parse(result.rows[index].geopunt);
@@ -116,7 +116,7 @@ exports.getPanden = function (req, res) {
         global.bag.query(query_str, [id],
                 function (err, result) {
                     if (err) {
-                        res.json(err);
+                        res.status(400).json(err);
                     } else {
                         var geopunt = result.rows[0].geopunt;
                         var pandid = result.rows[0].pand;
@@ -125,7 +125,7 @@ exports.getPanden = function (req, res) {
 
                         global.bag.query(query_str, [geopunt, srid], function (err, result) {
                             if (err) {
-                                res.json(err);
+                                res.status(400).json(err);
                             } else {
                                 for (index = 0; index < result.rows.length; ++index) {
                                     var geometry = JSON.parse(result.rows[index].geovlak);
@@ -189,7 +189,7 @@ exports.autoComplete = function (req, res) {
             global.bag.query(query_str, [finalsearch, srid],
                     function (err, result) {
                         if (err) {
-                            res.json(err);
+                            res.status(400).json(err);
                         } else {
                             //If the result is only one record, rerun it to get more details!
                             if (result.rows.length === 1) {
@@ -210,7 +210,7 @@ exports.autoComplete = function (req, res) {
                                 global.bag.query(query_str, [finalsearch, srid],
                                         function (err, result) {
                                             if (err) {
-                                                res.json(err);
+                                                res.status(400).json(err);
                                             } else {
                                                 //If the result is only one record, rerun it to get more details!
                                                 res.json(result.rows);

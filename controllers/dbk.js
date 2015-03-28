@@ -29,7 +29,7 @@ exports.getOrganisation = function(req, res) {
         global.pool.query(query_str, [srid],
             function(err, result){
                 if(err) {
-                    res.json(err);
+                    res.status(400).json(err);
                 } else {
                     res.json(removeNulls(result.rows[0]));
                 }
@@ -48,7 +48,7 @@ exports.postAnnotation = function(req, res) {
         req.body.municipality, req.body.place, req.body.address, req.body.phone, req.body.remarks, req.body.permalink, point, req.body.srid],
         function(err, result){
             if(err) {
-                res.json(err);
+                res.status(400).json(err);
             } else {
                 res.json({"result":"ok"});
             }
@@ -70,7 +70,7 @@ exports.getObject = function(req, res) {
         global.pool.query(query_str, [id, srid],
             function(err, result){
                 if(err) {
-                    res.json(err);
+                    res.status(400).json(err);
                 } else {
                     res.json(removeNulls(result.rows[0]));
                 }
@@ -92,7 +92,7 @@ exports.getGebied = function(req, res) {
         global.pool.query(query_str, [id, srid],
             function(err, result){
                 if(err) {
-                    res.json(err);
+                    res.status(400).json(err);
                 } else {
                     res.json(removeNulls(result.rows[0]));
                 }
@@ -112,7 +112,7 @@ exports.getFeatures = function(req, res) {
         global.pool.query(query_str, [srid],
             function(err, result){
                 if(err) {
-                    res.json(err);
+                    res.status(400).json(err);
                 } else {
                     var resultset = {"type": "FeatureCollection", "features": []};
 

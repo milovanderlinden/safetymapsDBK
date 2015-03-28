@@ -39,7 +39,7 @@ exports.annotationbulk = function(req, res) {
             global.pool.query(query_str,
                 function(err, result) {
                     if (err) {
-                        res.json(err);
+                        res.status(400).json(err);
                     } else {
                         var errors = [];
                         var success = [];

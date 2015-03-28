@@ -35,9 +35,8 @@ function nen1414(req, res) {
     global.pool.query(query_str,
             function (err, result) {
                 if (err) {
-                    res.render('error', {title: 'Fout opgetreden', error: 'De NEN1414 bibliotheek kan niet worden getoond'});
+                    res.status(400).render('error', {title: 'Fout opgetreden', error: 'De NEN1414 bibliotheek kan niet worden getoond'});
                 } else {
-                    console.log(result.rows);
                     res.render('nen1414', {title: 'nen1414', items: result.rows});
                 }
                 return;
@@ -83,10 +82,9 @@ function checkToken(token, res) {
         require('crypto').randomBytes(24, function (ex, buf) {
             var newtoken = buf.toString('hex');
             if (newtoken === token) {
-                res.render('error', {title: 'Yeah!', error: 'Goed zo!'});
+                res.status(400).render('error', {title: 'Yeah!', error: 'Goed zo!'});
             } else {
-                res.status(500);
-                res.render('error', {title: 'Fout', error: token + ' is niet gelijk aan ' + newtoken});
+                res.status(400).render('error', {title: 'Fout', error: token + ' is niet gelijk aan ' + newtoken});
             }
         });
     }
@@ -142,13 +140,12 @@ function setup(app) {
             req.pipe(x);
             x.pipe(res);
             x.on('error', function (err) {
-                //console.log(err);
-                res.json({
+                res.status(400).json({
                     "error": "Timeout on proxy"
                 })
             });
         } else {
-            res.json({"error": "wrong use of proxy"});
+            res.status(400).json({"error": "wrong use of proxy"});
         }
     });
     app.get('/eughs.html', eughs);
