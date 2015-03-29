@@ -75,9 +75,9 @@ dbkjs.modules.support = {
                 //Selectie voor kaartlagen
                 var layerarray = [];
                 $.each(dbkjs.map.layers, function (l_index, layer) {
-                    if ($.inArray(layer.name, ['hulplijn1', 'hulplijn2', 'Feature', 'Support']) === -1) {
+                    if ($.inArray(layer.name, ['hulplijn1', 'hulplijn2', 'Feature', 'Support', 'print']) === -1) {
                         //layername mag niet beginnen met OpenLayers_
-                        if (layer.name.substring(0, 11) !== "OpenLayers_") {
+                        if (layer.name.substring(0, 11) !== "OpenLayers_" && layer.getVisibility()) {
                             layerarray.push(layer.name);
                         }
                     }
