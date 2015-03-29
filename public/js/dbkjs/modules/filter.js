@@ -89,14 +89,13 @@ dbkjs.modules.filter = {
             _obj.selectie = [];
             $("#sel_oms").prop('selectedIndex', 0);
             $("#sel_risk").prop('selectedIndex', 0);
-            $("#sel_func").prop('selectedIndex', 0);
+            $("#sel_func").val([]);
             $("#sel_gevstof").prop('selectedIndex', 0);
             $("#sel_inzet").prop('selectedIndex', 0);
-            $("#sel_construction").prop('selectedIndex', 0);
-            $("#sel_guid").prop('selectedIndex', 0);
+            $("#sel_construction").val([]);
             $("#sel_floor").prop('selectedIndex', 0);
             $("#sel_bhv").prop('selectedIndex', 0);
-            $("#sel_guid").prop('selectedIndex', 0);
+            $("#sel_guid").val([]);
             _obj.getFilter();
             $('#btn_filter').removeClass('btn-warning');
             $('#btn_filter').addClass('btn-default');
@@ -142,11 +141,6 @@ dbkjs.modules.filter = {
             } else if (inzetfilter === 'T' && dbkjs.util.isJsonNull(feat.attributes.inzetprocedure)) {
                 compliant = false;
             }
-//            if (constructionfilter === 'F' && !dbkjs.util.isJsonNull(feat.attributes.construction)) {
-//                compliant = false;
-//            } else if (constructionfilter === 'T' && dbkjs.util.isJsonNull(feat.attributes.construction)) {
-//                compliant = false;
-//            }
             if (omsfilter === 'F' && !dbkjs.util.isJsonNull(feat.attributes.OMSNummer)) {
                 compliant = false;
             } else if (omsfilter === 'T' && dbkjs.util.isJsonNull(feat.attributes.OMSNummer)) {
@@ -187,32 +181,6 @@ dbkjs.modules.filter = {
         _obj.selectie = test;
         $('#filter_dialog_f').html(_obj.selectie.length + ' ' + i18n.t('filter.selected'));
         return(_obj.selectie);
-    },
-    getGuidanceFilter: function () {
-        var _obj = dbkjs.modules.filter;
-        var guidance = [];
-        $.each(dbkjs.modules.feature.features, function (fix, feat) {
-            if ($.isArray(feat.attributes.guidance)) {
-                guidance = guidance.concat(feat.attributes.guidance);
-            }
-        });
-        var test = guidance.unique();
-        test.sort();
-        if (test.length > 0) {
-            $('#filter_dialog_b').append('<label for="sel_guid">' + i18n.t('filter.guidance') + '</label> ');
-            _obj.sel_guid = $('<select id="sel_guid" size="4" class="form-control" MULTIPLE><select>');
-            //_obj.sel_guid.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
-            $.each(test, function (rix, guid) {
-                _obj.sel_guid.append('<option value="' + guid + '">' + guid + '</option>');
-            });
-
-            $('#filter_dialog_b').append(_obj.sel_guid);
-            $('#sel_guid').change(function () {
-                _obj.getFilter();
-            });
-        } else {
-            $('#filter_dialog_b').append('<div>' + i18n.t('filter.noguidance') + '</div> ');
-        }
     },
     getInzetFilter: function () {
         var _obj = dbkjs.modules.filter;
@@ -301,6 +269,31 @@ dbkjs.modules.filter = {
             $('#filter_dialog_b').append('<div>' + i18n.t('filter.norisk') + '</div> ');
         }
     },
+    getGuidanceFilter: function () {
+        var _obj = dbkjs.modules.filter;
+        var guidance = [];
+        $.each(dbkjs.modules.feature.features, function (fix, feat) {
+            if ($.isArray(feat.attributes.guidance)) {
+                guidance = guidance.concat(feat.attributes.guidance);
+            }
+        });
+        var test = guidance.unique();
+        test.sort();
+        if (test.length > 0) {
+            $('#filter_dialog_b').append('<label for="sel_guid">' + i18n.t('filter.guidance') + '</label> ');
+            _obj.sel_guid = $('<select id="sel_guid" size="4" class="form-control" MULTIPLE><select>');
+            $.each(test, function (rix, guid) {
+                _obj.sel_guid.append('<option value="' + guid + '">' + guid + '</option>');
+            });
+
+            $('#filter_dialog_b').append(_obj.sel_guid);
+            $('#sel_guid').change(function () {
+                _obj.getFilter();
+            });
+        } else {
+            $('#filter_dialog_b').append('<div>' + i18n.t('filter.noguidance') + '</div> ');
+        }
+    },
     getFunctieFilter: function () {
         var _obj = dbkjs.modules.filter;
         var functies = [];
@@ -314,7 +307,6 @@ dbkjs.modules.filter = {
         if (test.length > 0) {
             $('#filter_dialog_b').append('<label for="sel_func">' + i18n.t('filter.functions') + '</label> ');
             _obj.sel_func = $('<select id="sel_func" size="4" class="form-control" MULTIPLE><select>');
-            //_obj.sel_func.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
             $.each(test, function (rix, functie) {
                 _obj.sel_func.append('<option value="' + functie + '">' + functie + '</option>');
             });
