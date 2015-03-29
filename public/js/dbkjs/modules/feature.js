@@ -135,14 +135,6 @@ dbkjs.modules.feature = {
         $.getJSON(dbkjs.dataPath + 'features.json', params).done(function(data) {
             var geojson_format = new OpenLayers.Format.GeoJSON();
                 _obj.features = geojson_format.read(data);
-//                var test = data.features.where( "( el, i, res, param ) => el.properties.gevaarlijkestof !== null");
-//                console.log(test.length + ' DBK Features met gevaarlijke stoffen');
-//                var test = data.features.where( "( el, i, res, param ) => el.properties.OMSNummer !== null");
-//                console.log(test.length + ' DBK Features met OMS nummer');
-//                var test = data.features.where( "( el, i, res, param ) => el.properties.typeFeature === 'Object'");
-//                console.log(test.length + ' DBK objecten');
-//                var test = data.features.where( "( el, i, res, param ) => el.properties.typeFeature === 'Gebied'");
-//                console.log(test.length + ' DBK gebieden');
             if(dbkjs.modules.filter && dbkjs.modules.filter.selectie.length > 0 ) {
                 var selfeat = [];
                 $.each(_obj.features, function(fix,feat){

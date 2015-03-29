@@ -171,6 +171,35 @@
         "name": "Naam",
         "telephone": "Telefoon"
     },
+    "filter": {
+        "activate": "Activeren",
+        "reset": "Reset",
+        "filter": "Filter",
+        "button": "Filter toepassen",
+        "oms":"OMS",
+        "bhv":"BHV",
+        "adjust": "Filter aanpassen",
+        "set": "Filter instellen",
+        "selected": "geselecteerd",
+        "with": "met",
+        "without": "zonder",
+        "nofilter": "niet filteren",
+        "procedure": "Inzetprocedure",
+        "hazard": "Gevaarlijke stoffen",
+        "risk": "Risicoklasse",
+        "norisk": "Er zijn geen risicoklassen",
+        "functions": "Functies",
+        "nofunctions": "Er zijn geen functies",
+        "guidance": "Brandweervoorzieningen",
+        "noguidance": "Er zijn geen brandweervoorzieningen",
+        "notset":"niet ingesteld",
+        "flooring": "Bovengronds",
+        "below": "volledig ondergronds",
+        "above": "volledig bovengronds",
+        "both": "onder- en bovengronds",
+        "construction": "Gebouwconstructie",
+        "noconstruction": "Er zijn geen gebouwconstructies"
+    },
     "search": {
         "search": "Zoek",
         "dbk": "DBK",
@@ -201,7 +230,8 @@
         "kindregards": "Met vriendelijke groet",
         "team": "de safetymapsDBK applicatie",
         "help": "Versleep eventueel het symbool op de kaart om aan te geven waar de fout is geconstateerd of waar de melding over gaat.",
-        "generalmessage":"Algemene melding"
+        "generalmessage":"Algemene melding",
+        "construction": "Gebouw constructie"
     },
     "eughs": {
         "intro": "Het Globally Harmonised System van de Verenigde Naties (VN-GHS) is in 2002 door de VN vastgesteld",
