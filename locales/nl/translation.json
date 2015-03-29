@@ -190,14 +190,14 @@
         "norisk": "Er zijn geen risicoklassen",
         "functions": "Functies",
         "nofunctions": "Er zijn geen functies",
-        "guidance": "Brandweervoorzieningen",
+        "guidance": "Brandweer voorziening",
         "noguidance": "Er zijn geen brandweervoorzieningen",
         "notset":"niet ingesteld",
         "flooring": "Bovengronds",
         "below": "volledig ondergronds",
         "above": "volledig bovengronds",
         "both": "onder- en bovengronds",
-        "construction": "Gebouwconstructie",
+        "construction": "Gebouw constructie",
         "noconstruction": "Er zijn geen gebouwconstructies"
     },
     "search": {

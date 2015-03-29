@@ -35,10 +35,6 @@ dbkjs.modules.filter = {
                 '<i class="fa fa-filter"></i>' +
                 '</a>');
         $('body').append(dbkjs.util.createModal('filter_dialog', '<i class="fa fa-filter"></i> ' + i18n.t('filter.filter')));
-        var btn_filter_set = $('<button id="btn_filter_set" class="btn btn-block btn-warning btn_5px" type="button">' + i18n.t('filter.activate') + '</button>');
-        var btn_filter_reset = $('<button id="btn_filter_reset" class="btn btn-block btn-default btn_5px" type="button">' + i18n.t('filter.reset') + '</button>');
-        $('#filter_dialog_b').append(btn_filter_set);
-        $('#filter_dialog_b').append(btn_filter_reset);
         $('#btn_filter').click(function () {
             //zet alle dbk's uit en zoom naar de regio.
             dbkjs.modules.updateFilter(0);
@@ -57,6 +53,8 @@ dbkjs.modules.filter = {
                 $('#infopanel').hide();
             }
             if (!_obj.activated) {
+                $('#filter_dialog_b').html('');
+                $('#filter_dialog_b').append('<div id="filter_dialog_form" class="form-horizontal"></div>');
                 _obj.getOmsFilter();
                 _obj.getBhvFilter();
                 _obj.getGevaarlijkestoffenFilter();
@@ -66,41 +64,44 @@ dbkjs.modules.filter = {
                 _obj.getFunctieFilter();
                 _obj.getGuidanceFilter();
                 _obj.getRisicoKlasseFilter();
+                var btn_filter_set = $('<div class="col-sm-12"><button id="btn_filter_set" class="btn btn-primary btn_5px btn-block" type="button">' + i18n.t('filter.activate') + '</button></div>');
+                var btn_filter_reset = $('<div class="col-sm-12"><button id="btn_filter_reset" class="btn btn-default btn_5px btn-block" type="button">' + i18n.t('filter.reset') + '</button></div>');
+                $('#filter_dialog_form').append(btn_filter_set);
+                $('#filter_dialog_form').append(btn_filter_reset);
+                $('#btn_filter_set').click(function () {
+                    _obj.getFilter();
+                    if (_obj.selectie.length > 0) {
+                        $('#btn_filter').removeClass('btn-default');
+                        $('#btn_filter').addClass('btn-warning');
+                        $('#btn_filter').prop('title', i18n.t('filter.adjust'));
+                    } else {
+                        $('#btn_filter').removeClass('btn-warning');
+                        $('#btn_filter').addClass('btn-default');
+                        $('#btn_filter').prop('title', i18n.t('filter.set'));
+                    }
+                    $('#btn_refresh').click();
+                });
+                $('#btn_filter_reset').click(function () {
+                    _obj.selectie = [];
+                    $("#sel_oms").prop('selectedIndex', 0);
+                    $("#sel_risk").prop('selectedIndex', 0);
+                    $("#sel_func").val([]);
+                    $("#sel_gevstof").prop('selectedIndex', 0);
+                    $("#sel_inzet").prop('selectedIndex', 0);
+                    $("#sel_construction").val([]);
+                    $("#sel_floor").prop('selectedIndex', 0);
+                    $("#sel_bhv").prop('selectedIndex', 0);
+                    $("#sel_guid").val([]);
+                    _obj.getFilter();
+                    $('#btn_filter').removeClass('btn-warning');
+                    $('#btn_filter').addClass('btn-default');
+                    $('#btn_filter').prop('title', i18n.t('filter.set'));
+                    $('#btn_refresh').click();
+                });
             }
             _obj.activated = true;
             _obj.getFilter();
             $('#filter_dialog').modal('toggle');
-        });
-
-        $('#btn_filter_set').click(function () {
-            _obj.getFilter();
-            if (_obj.selectie.length > 0) {
-                $('#btn_filter').removeClass('btn-default');
-                $('#btn_filter').addClass('btn-warning');
-                $('#btn_filter').prop('title', i18n.t('filter.adjust'));
-            } else {
-                $('#btn_filter').removeClass('btn-warning');
-                $('#btn_filter').addClass('btn-default');
-                $('#btn_filter').prop('title', i18n.t('filter.set'));
-            }
-            $('#btn_refresh').click();
-        });
-        $('#btn_filter_reset').click(function () {
-            _obj.selectie = [];
-            $("#sel_oms").prop('selectedIndex', 0);
-            $("#sel_risk").prop('selectedIndex', 0);
-            $("#sel_func").val([]);
-            $("#sel_gevstof").prop('selectedIndex', 0);
-            $("#sel_inzet").prop('selectedIndex', 0);
-            $("#sel_construction").val([]);
-            $("#sel_floor").prop('selectedIndex', 0);
-            $("#sel_bhv").prop('selectedIndex', 0);
-            $("#sel_guid").val([]);
-            _obj.getFilter();
-            $('#btn_filter').removeClass('btn-warning');
-            $('#btn_filter').addClass('btn-default');
-            $('#btn_filter').prop('title', i18n.t('filter.set'));
-            $('#btn_refresh').click();
         });
     },
     getFilter: function () {
@@ -157,7 +158,7 @@ dbkjs.modules.filter = {
                     compliant = false;
                 }
             }
-            
+
             if (!dbkjs.util.isJsonNull(constructionfilter) && !dbkjs.util.isJsonNull(feat.attributes.construction)) {
                 if ($.inArray(feat.attributes.construction.toLowerCase(), constructionfilter) === -1) {
                     compliant = false;
@@ -184,68 +185,79 @@ dbkjs.modules.filter = {
     },
     getInzetFilter: function () {
         var _obj = dbkjs.modules.filter;
-        $('#filter_dialog_b').append('<label for="sel_inzet">' + i18n.t('filter.procedure') + '</label> ');
+        var formgroup = $('<div class="form-group">');
+        formgroup.append('<label class="col-sm-4 control-label" for="sel_inzet">' + i18n.t('filter.procedure') + '</label> ');
         _obj.sel_inzet = $('<select id="sel_inzet" class="form-control"><select>');
         _obj.sel_inzet.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
         _obj.sel_inzet.append('<option value="F">' + i18n.t('filter.without') + ' ' + i18n.t('filter.procedure').toLowerCase() + '</option>');
         _obj.sel_inzet.append('<option value="T">' + i18n.t('filter.with') + ' ' + i18n.t('filter.procedure').toLowerCase() + '</option>');
-        $('#filter_dialog_b').append(_obj.sel_inzet);
+        formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_inzet));
+        $('#filter_dialog_form').append(formgroup);
         $('#sel_inzet').change(function () {
             _obj.getFilter();
         });
     },
     getGevaarlijkestoffenFilter: function () {
         var _obj = dbkjs.modules.filter;
-        $('#filter_dialog_b').append('<label for="sel_gevstof">' + i18n.t('filter.hazard') + '</label> ');
+        var formgroup = $('<div class="form-group">');
+        formgroup.append('<label class="col-sm-4 control-label" for="sel_gevstof">' + i18n.t('filter.hazard') + '</label> ');
         _obj.sel_gevstof = $('<select id="sel_gevstof" class="form-control"><select>');
         _obj.sel_gevstof.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
         _obj.sel_gevstof.append('<option value="F">' + i18n.t('filter.without') + ' ' + i18n.t('filter.hazard').toLowerCase() + '</option>');
         _obj.sel_gevstof.append('<option value="T">' + i18n.t('filter.with') + ' ' + i18n.t('filter.hazard').toLowerCase() + '</option>');
-        $('#filter_dialog_b').append(_obj.sel_gevstof);
+        formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_gevstof));
+        $('#filter_dialog_form').append(formgroup);
         $('#sel_gevstof').change(function () {
             _obj.getFilter();
         });
     },
     getBhvFilter: function () {
         var _obj = dbkjs.modules.filter;
-        $('#filter_dialog_b').append('<label for="sel_bhv">' + i18n.t('filter.bhv') + '</label> ');
+        var formgroup = $('<div class="form-group">');
+        formgroup.append('<label class="col-sm-4 control-label" for="sel_bhv">' + i18n.t('filter.bhv') + '</label> ');
         _obj.sel_bhv = $('<select id="sel_bhv" class="form-control"><select>');
         _obj.sel_bhv.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
         _obj.sel_bhv.append('<option value="F">' + i18n.t('filter.without') + ' ' + i18n.t('filter.bhv').toLowerCase() + '</option>');
         _obj.sel_bhv.append('<option value="T">' + i18n.t('filter.with') + ' ' + i18n.t('filter.bhv').toLowerCase() + '</option>');
-        $('#filter_dialog_b').append(_obj.sel_bhv);
+        formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_bhv));
+        $('#filter_dialog_form').append(formgroup);
         $('#sel_bhv').change(function () {
             _obj.getFilter();
         });
     },
     getFlooringFilter: function () {
         var _obj = dbkjs.modules.filter;
-        $('#filter_dialog_b').append('<label for="sel_floor">' + i18n.t('filter.flooring') + '</label> ');
+        var formgroup = $('<div class="form-group">');
+        formgroup.append('<label class="col-sm-4 control-label" for="sel_floor">' + i18n.t('filter.flooring') + '</label> ');
         _obj.sel_floor = $('<select id="sel_floor" class="form-control"><select>');
         _obj.sel_floor.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
         _obj.sel_floor.append('<option value="above">' + i18n.t('filter.above').toLowerCase() + '</option>');
         _obj.sel_floor.append('<option value="below">' + i18n.t('filter.below').toLowerCase() + '</option>');
         _obj.sel_floor.append('<option value="both">' + i18n.t('filter.both').toLowerCase() + '</option>');
         _obj.sel_floor.append('<option value="none">' + i18n.t('filter.notset') + '</option>');
-        $('#filter_dialog_b').append(_obj.sel_floor);
+        formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_floor));
+        $('#filter_dialog_form').append(formgroup);
         $('#sel_floor').change(function () {
             _obj.getFilter();
         });
     },
     getOmsFilter: function () {
         var _obj = dbkjs.modules.filter;
-        $('#filter_dialog_b').append('<label for="sel_oms">' + i18n.t('filter.oms') + '</label> ');
+        var formgroup = $('<div class="form-group">');
+        formgroup.append('<label class="col-sm-4 control-label" for="sel_oms">' + i18n.t('filter.oms') + '</label> ');
         _obj.sel_oms = $('<select id="sel_oms" class="form-control"><select>');
         _obj.sel_oms.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
         _obj.sel_oms.append('<option value="F">' + i18n.t('filter.without') + ' ' + i18n.t('filter.oms').toLowerCase() + '</option>');
         _obj.sel_oms.append('<option value="T">' + i18n.t('filter.with') + ' ' + i18n.t('filter.oms').toLowerCase() + '</option>');
-        $('#filter_dialog_b').append(_obj.sel_oms);
+        formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_oms));
+        $('#filter_dialog_form').append(formgroup);
         $('#sel_oms').change(function () {
             _obj.getFilter();
         });
     },
     getRisicoKlasseFilter: function () {
         var _obj = dbkjs.modules.filter;
+        var formgroup = $('<div class="form-group">');
         var risicoklassen = [];
         $.each(dbkjs.modules.feature.features, function (fix, feat) {
             if (!dbkjs.util.isJsonNull(feat.attributes.risicoklasse)) {
@@ -254,23 +266,25 @@ dbkjs.modules.filter = {
         });
         var test = risicoklassen.unique();
         if (test.length > 0) {
-            $('#filter_dialog_b').append('<label for="sel_risk">' + i18n.t('filter.risk') + '</label> ');
+            formgroup.append('<label class="col-sm-4 control-label" for="sel_risk">' + i18n.t('filter.risk') + '</label> ');
             _obj.sel_risk = $('<select id="sel_risk" size="4" class="form-control"><select>');
             _obj.sel_risk.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
             $.each(test, function (rix, risk) {
                 _obj.sel_risk.append('<option value="' + risk + '">' + risk + '</option>');
             });
 
-            $('#filter_dialog_b').append(_obj.sel_risk);
+            formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_risk));
+            $('#filter_dialog_form').append(formgroup);
             $('#sel_risk').change(function () {
                 _obj.getFilter();
             });
         } else {
-            $('#filter_dialog_b').append('<div>' + i18n.t('filter.norisk') + '</div> ');
+            $('#filter_dialog_form').append('<div class="form-group from-group-sm"><div class="col-sm-4"></div><div class="col-sm-8">' + i18n.t('filter.norisk') + '</div></div> ');
         }
     },
     getGuidanceFilter: function () {
         var _obj = dbkjs.modules.filter;
+        var formgroup = $('<div class="form-group">');
         var guidance = [];
         $.each(dbkjs.modules.feature.features, function (fix, feat) {
             if ($.isArray(feat.attributes.guidance)) {
@@ -280,22 +294,24 @@ dbkjs.modules.filter = {
         var test = guidance.unique();
         test.sort();
         if (test.length > 0) {
-            $('#filter_dialog_b').append('<label for="sel_guid">' + i18n.t('filter.guidance') + '</label> ');
+            formgroup.append('<label class="col-sm-4 control-label" for="sel_guid">' + i18n.t('filter.guidance') + '</label> ');
             _obj.sel_guid = $('<select id="sel_guid" size="4" class="form-control" MULTIPLE><select>');
             $.each(test, function (rix, guid) {
                 _obj.sel_guid.append('<option value="' + guid + '">' + guid + '</option>');
             });
 
-            $('#filter_dialog_b').append(_obj.sel_guid);
+            formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_guid));
+            $('#filter_dialog_form').append(formgroup);
             $('#sel_guid').change(function () {
                 _obj.getFilter();
             });
         } else {
-            $('#filter_dialog_b').append('<div>' + i18n.t('filter.noguidance') + '</div> ');
+            $('#filter_dialog_form').append('<div class="form-group from-group-sm"><div class="col-sm-4"></div><div class="col-sm-8">' + i18n.t('filter.noguidance') + '</div></div>');
         }
     },
     getFunctieFilter: function () {
         var _obj = dbkjs.modules.filter;
+        var formgroup = $('<div class="form-group">');
         var functies = [];
         $.each(dbkjs.modules.feature.features, function (fix, feat) {
             if (!dbkjs.util.isJsonNull(feat.attributes.functie)) {
@@ -305,22 +321,23 @@ dbkjs.modules.filter = {
         var test = functies.unique();
         test.sort();
         if (test.length > 0) {
-            $('#filter_dialog_b').append('<label for="sel_func">' + i18n.t('filter.functions') + '</label> ');
+            formgroup.append('<label class="col-sm-4 control-label" for="sel_func">' + i18n.t('filter.functions') + '</label> ');
             _obj.sel_func = $('<select id="sel_func" size="4" class="form-control" MULTIPLE><select>');
             $.each(test, function (rix, functie) {
                 _obj.sel_func.append('<option value="' + functie + '">' + functie + '</option>');
             });
-
-            $('#filter_dialog_b').append(_obj.sel_func);
+            formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_func));
+            $('#filter_dialog_form').append(formgroup);
             $('#sel_func').change(function () {
                 _obj.getFilter();
             });
         } else {
-            $('#filter_dialog_b').append('<div>' + i18n.t('filter.nofunctions') + '</div> ');
+            $('#filter_dialog_form').append('<div class="form-group from-group-sm"><div class="col-sm-4"></div><div class="col-sm-8">' + i18n.t('filter.functions') + '</div></div>');
         }
     },
     getConstructionFilter: function () {
         var _obj = dbkjs.modules.filter;
+        var formgroup = $('<div class="form-group">');
         var constructions = [];
         $.each(dbkjs.modules.feature.features, function (fix, feat) {
             if (!dbkjs.util.isJsonNull(feat.attributes.construction)) {
@@ -330,19 +347,19 @@ dbkjs.modules.filter = {
         var test = constructions.unique();
         test.sort();
         if (test.length > 0) {
-            $('#filter_dialog_b').append('<label for="sel_construction">' + i18n.t('filter.construction') + '</label> ');
+            formgroup.append('<label class="col-sm-4 control-label" for="sel_construction">' + i18n.t('filter.construction') + '</label> ');
             _obj.sel_construction = $('<select id="sel_construction" size="4" class="form-control" MULTIPLE><select>');
             //_obj.sel_func.append('<option value="" selected>' + i18n.t('filter.nofilter') + '</option>');
             $.each(test, function (rix, functie) {
                 _obj.sel_construction.append('<option value="' + functie + '">' + functie + '</option>');
             });
-
-            $('#filter_dialog_b').append(_obj.sel_construction);
+            formgroup.append($('<div class="col-sm-8"></div>').append(_obj.sel_construction));
+            $('#filter_dialog_form').append(formgroup);
             $('#sel_construction').change(function () {
                 _obj.getFilter();
             });
         } else {
-            $('#filter_dialog_b').append('<div>' + i18n.t('filter.noconstructions') + '</div> ');
+            $('#filter_dialog_form').append('<div class="form-group from-group-sm"><div class="col-sm-4"></div><div class="col-sm-8">' + i18n.t('filter.noconstructions') + '</div></div>');
         }
     },
     diff: function (source, target) {
