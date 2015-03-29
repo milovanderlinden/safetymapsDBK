@@ -429,11 +429,12 @@ dbkjs.protocol.jsonDBK = {
 
             var features = [];
             $.each(feature.brandweervoorziening, function(idx, myGeometry){
+                var information = myGeometry.aanvullendeInformatie || '';
                 var myFeature = new OpenLayers.Feature.Vector(new OpenLayers.Format.GeoJSON().read(myGeometry.geometry, "Geometry"));
                 myFeature.attributes = {
                     "type" : myGeometry.typeVoorziening,
                     "name": myGeometry.naamVoorziening,
-                    "information": myGeometry.aanvullendeInformatie,
+                    "information": information,
                     "rotation": myGeometry.hoek,
                     "category": myGeometry.categorie,
                     "namespace": myGeometry.namespace,
@@ -478,14 +479,17 @@ dbkjs.protocol.jsonDBK = {
                 i18n.t('chemicals.information') + '</th></tr>');
             var features = [];
              $.each(feature.gevaarlijkestof, function(idx, myGeometry){
+                var name = myGeometry.naamStof || '';
+                var quantity = myGeometry.hoeveelheid ? myGeometry.hoeveelheid.replace(/([0-9]+)([lL])/,"$1\u2113") : myGeometry.hoeveelheid || '';
+                var information = myGeometry.aanvullendeInformatie || '';
                 var myFeature = new OpenLayers.Feature.Vector(new OpenLayers.Format.GeoJSON().read(myGeometry.geometry, "Geometry"));
                 myFeature.attributes = {
                     "type" : myGeometry.symboolCode,
-                    "name": myGeometry.naamStof,
+                    "name": name,
                     "namespace": myGeometry.namespace,
-                    "quantity": myGeometry.hoeveelheid ? myGeometry.hoeveelheid.replace(/([0-9]+)([lL])/,"$1\u2113") : myGeometry.hoeveelheid,
+                    "quantity": quantity,
                     "indication": myGeometry.gevaarsindicatienummer,
-                    "information": myGeometry.aanvullendeInformatie,
+                    "information": information,
                     "unnumber": myGeometry.UNnummer,
                     "fid": "gevaarlijkestof_ft_" + idx
                 };
@@ -736,6 +740,8 @@ dbkjs.protocol.jsonDBK = {
                     i18n.t('tarry.days')+ '</th></tr>');
             $.each(feature.verblijf, function(verblijf_index, waarde) {
                 var dagen = '';
+                var nsr = waarde.aantalNietZelfredzaam || 0;
+                var sr = waarde.aantal || 0;
                 dagen += !waarde.maandag ? '<span class="label label-default">' + moment.weekdaysMin(1)+ '</span>' : '<span class="label label-success">' + moment.weekdaysMin(1)+ '</span>';
                 dagen += !waarde.dinsdag ? '<span class="label label-default">' + moment.weekdaysMin(2)+ '</span>' : '<span class="label label-success">' + moment.weekdaysMin(2)+ '</span>';
                 dagen += !waarde.woensdag ? '<span class="label label-default">' + moment.weekdaysMin(3)+ '</span>' : '<span class="label label-success">' + moment.weekdaysMin(3)+ '</span>';
@@ -746,8 +752,8 @@ dbkjs.protocol.jsonDBK = {
                 verblijf_table.append('<tr>' +
                         '<td>' + waarde.tijdvakBegintijd.substring(0,5) + '</td>' +
                         '<td>' + waarde.tijdvakEindtijd.substring(0,5) + '</td>' +
-                        '<td>' + waarde.aantal + '</td>' +
-                        '<td>' + waarde.aantalNietZelfredzaam + '</td>' +
+                        '<td>' + sr + '</td>' +
+                        '<td>' + nsr + '</td>' +
                         '<td>' + waarde.typeAanwezigheidsgroep + '</td>' +
                         '<td>' + dagen + '</td>' +
                         '</tr>');
