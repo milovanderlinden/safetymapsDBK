@@ -39,25 +39,6 @@ exports.getOrganisation = function(req, res) {
     }
 };
 
-exports.postAnnotation = function(req, res) {
-    var point = 'POINT(' + parseFloat(req.body.geometry.coordinates[0]) + ' '+ parseFloat(req.body.geometry.coordinates[1]) + ')';
-    //console.log(point);
-    var query_str = 'insert into organisation.annotation (subject, name, email, '+ 
-        'municipality, place, address, phone, remarks, permalink, the_geom) values ($1, $2, $3, $4, $5, $6, $7, $8, ST_transform(ST_PointFromText($9, $10),4326))';
-    global.pool.query(query_str, [req.body.subject, req.body.name, req.body.email, 
-        req.body.municipality, req.body.place, req.body.address, req.body.phone, req.body.remarks, req.body.permalink, point, req.body.srid],
-        function(err, result){
-            if(err) {
-                res.status(400).json(err);
-            } else {
-                res.json({"result":"ok"});
-            }
-            return;
-        }
-    );
-
-};
-
 exports.getObject = function(req, res) {
     //where identificatie = 1369659645
     if (req.query) {

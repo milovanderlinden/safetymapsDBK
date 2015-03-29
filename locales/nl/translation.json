@@ -183,10 +183,25 @@
         "coordplaceholder": "Lon,lat of X,Y punt voor decimaal"
     },
     "email": {
-        "annotation": "Terugmelding",
-        "annotationtitle": "Er is een terugmelding gedaan",
+        "title": "Melding",
+        "new": "Nieuwe melding",
+        "annotation": "Melding",
+        "annotationtitle": "Er is een melding gedaan",
+        "name": "Naam",
+        "address": "Adres",
+        "subject": "Onderwerp",
+        "remarks": "Opmerking",
+        "sender": "Afzender",
+        "send": "Verstuur",
+        "sent":"Melding is verstuurd.",
+        "error":"Er is iets fout gegaan.",
+        "email": "E-mail",
+        "link": "Link naar de melding",
+        "phone": "Telefoon",
         "kindregards": "Met vriendelijke groet",
-        "team": "de safetymapsDBK applicatie"
+        "team": "de safetymapsDBK applicatie",
+        "help": "Versleep eventueel het symbool op de kaart om aan te geven waar de fout is geconstateerd of waar de melding over gaat.",
+        "generalmessage":"Algemene melding"
     },
     "eughs": {
         "intro": "Het Globally Harmonised System van de Verenigde Naties (VN-GHS) is in 2002 door de VN vastgesteld",

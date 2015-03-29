@@ -169,10 +169,24 @@
         "coordplaceholder": "search.coordplaceholder"
     },
     "email": {
-        "annotation": "email.annotation",
-        "annotationtitle": "email.annotationtitle",
-        "kindregards": "email.kindregards",
-        "team": "email.team"
+        "annotation": "Report",
+        "new": "New report",
+        "annotationtitle": "Someone reported an issue",
+        "kindregards": "Kind regards",
+        "team": "The Safetymaps team",
+        "name": "Name",
+        "address": "Address",
+        "subject": "Subject",
+        "remarks": "Remarks",
+        "sender": "Sender",
+        "send": "Send",
+        "sent":"Report sent.",
+        "error":"An error occured.",
+        "email": "email",
+        "link": "Hyperlink to report",
+        "phone": "Phone",
+        "help": "Drag the symbol to provide the location.",
+        "generalmessage":"General"
     },
     "eughs": {
         "intro": "Het Globally Harmonised System van de Verenigde Naties (VN-GHS) is in 2002 door de VN vastgesteld",

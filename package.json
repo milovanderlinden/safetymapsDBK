@@ -44,7 +44,7 @@
     "i18next": "*",
     "jade": "*",
     "nconf": "*",
-    "nodemailer": "*",
+    "nodemailer": "0.7.1",
     "pg": "*",
     "request": "*",
     "uglify-js": "*"
