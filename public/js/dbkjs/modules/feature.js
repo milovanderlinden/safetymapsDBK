@@ -108,11 +108,8 @@ dbkjs.modules.feature = {
             styleMap: dbkjs.config.styles.dbkfeature
         });
         _obj.layer.setZIndex(2006);
-        //_obj.sketch.setZIndex(2002);
         _obj.layer.displayInLayerSwitcher = false;
-        //_obj.sketch.displayInLayerSwitcher = false;
         dbkjs.map.addLayer(_obj.layer);
-        //Add the layer to the selectControl
         dbkjs.selectControl.setLayer((dbkjs.selectControl.layers || dbkjs.selectControl.layer).concat(_obj.layer));
         dbkjs.selectControl.activate();
         _obj.layer.events.on({
@@ -167,12 +164,12 @@ dbkjs.modules.feature = {
     search_dbk: function() {
         var _obj = dbkjs.modules.feature;
         var dbk_naam_array = _obj.getDbkSearchValues();
-        dbkjs.gui.updateSearchInput(_obj, dbk_naam_array);
+        dbkjs.gui.updateSearchInput(_obj, 'dbk', dbk_naam_array);
     },
     search_oms: function() {
         var _obj = dbkjs.modules.feature;
-        var dbk_naam_array = _obj.getOmsSearchValues();
-        dbkjs.gui.updateSearchInput(_obj, dbk_naam_array);
+        var oms_naam_array = _obj.getOmsSearchValues();
+        dbkjs.gui.updateSearchInput(_obj, 'oms', oms_naam_array);
     },
     getDbkSearchValues: function() {
         var _obj = dbkjs.modules.feature;
@@ -193,7 +190,7 @@ dbkjs.modules.feature = {
     },
     getOmsSearchValues: function() {
         var _obj = dbkjs.modules.feature,
-            dbk_naam_array = [];
+            oms_naam_array = [];
         if(_obj.caches.hasOwnProperty('oms')) {
             return _obj.caches.oms;
         }
@@ -202,10 +199,10 @@ dbkjs.modules.feature = {
                 // Extend feature object with value and id for searching
                 feature.value = feature.attributes.OMSNummer + ' ' + feature.attributes.formeleNaam;
                 feature.id = feature.attributes.identificatie;
-                dbk_naam_array.push(feature);
+                oms_naam_array.push(feature);
             }
         });
-        _obj.caches.oms = dbk_naam_array;
+        _obj.caches.oms = oms_naam_array;
         return _obj.caches.oms;
     },
     handleDbkOmsSearch: function(object) {

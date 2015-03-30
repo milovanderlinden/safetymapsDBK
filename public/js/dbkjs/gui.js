@@ -22,11 +22,11 @@ dbkjs.gui = {
         });
     },
     // feature.js
-    updateSearchInput: function(obj,dbk_naam_array) {
+    updateSearchInput: function(obj,name, dbk_naam_array) {
         $('#search_input').typeahead('destroy');
         $('#search_input').val('');
         $('#search_input').typeahead({
-            name: 'dbk',
+            name: name,
             local: dbk_naam_array,
             limit: 10
         });
