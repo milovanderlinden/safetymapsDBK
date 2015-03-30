@@ -134,7 +134,7 @@
         "prevention": "Brandweervoorziening",
         "chemicals": "Gevaarlijke stoffen",
         "risk": "Risicoklasse",
-        "omsdetail": "OMS contacten"
+        "omsdetail": "OMS"
     },
     "chemicals": {
         "type": "Soort",
@@ -161,10 +161,13 @@
         "type": "Soort",
         "comment": "Informatie"
     },
-    "omsdetail": {
-        "name": "Naam",
+    "oms": {
+        "contact": "Contact",
+        "number": "OMS nummer",
         "mobile": "Tel. mobiel",
-        "telephone": "Tel. vast"
+        "telephone": "Tel. vast",
+        "objectname": "Object naam",
+        "criterium": "Criterium"
     },
     "contact": {
         "role": "Functie",

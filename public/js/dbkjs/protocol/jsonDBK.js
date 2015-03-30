@@ -595,16 +595,44 @@ dbkjs.protocol.jsonDBK = {
         if (feature.oms_details) {
             var active_tab = _obj.active_tab === 'gevaarlijkestof' ?  'active' : '';
             var omsdetail_div = $('<div class="tab-pane" ' + active_tab + ' id="' + id + '"></div>');
-            var omsdetail_table_div = $('<div class="table-responsive"></div>');
-            var omsdetail_table = $('<table class="table table-hover"></table>');
-            omsdetail_table.append('<tr><th>' +
-                    i18n.t('omsdetail.name') + '</th><th>' +
-                    i18n.t('omsdetail.mobile') + '</th><th>' +
-                    i18n.t('omsdetail.telephone') + '</th></tr>');
+
+            var omscontact_table_div = $('<div class="table-responsive"></div>');
+            var omscontact_table = $('<table class="table table-hover"></table>');
+            omscontact_table.append('<tr><th>' +
+                    i18n.t('oms.contact') + '</th><th>' +
+                    i18n.t('oms.mobile') + '</th><th>' +
+                    i18n.t('oms.telephone') + '</th></tr>');
+            
+            var omsinfo_table_div = $('<div class="table-responsive"></div>');
+            var omsinfo_table = $('<table class="table table-hover"></table>');
+            var omscrit_table_div = $('<div class="table-responsive"></div>');
+            var omscrit_table = $('<table class="table table-hover"></table>');
             $.each(feature.oms_details, function(omsdetail_index, waarde) {
-                omsdetail_table.append(
+                var critstring = '';
+                omsinfo_table.append(
                         '<tr>' +
-                        '<td>Algemeen</td>' +
+                        '<td><b>' + i18n.t('oms.number') +'</b></td>' +
+                        '<td>' + waarde.omsnummer + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td><b>' + i18n.t('oms.objectname') +'</b></td>' +
+                        '<td>' + waarde.objectnaam + '</td>' +
+                        '</tr>'
+                        );
+                for (var i = 1; i < 17; i++) {
+                    if(waarde['crit'+i]){
+                        critstring += '<tr>' +
+                        '<td><b>' + i18n.t('oms.criterium') + ' ' + i +'</b></td>' +
+                        '<td> </td>' +
+                        '<td>' + waarde['crit'+i] + '</td>' +
+                        '</tr>';
+                    }
+                }
+                omscrit_table.append(critstring);
+                
+                omscontact_table.append(
+                        '<tr>' +
+                        '<td>' + i18n.t('dbk.general') +'</td>' +
                         '<td> </td>' +
                         '<td>' + waarde.tel_alg + '</td>' +
                         '</tr>' +
@@ -625,8 +653,12 @@ dbkjs.protocol.jsonDBK = {
                         '</tr>'
                         );
             });
-            omsdetail_table_div.append(omsdetail_table);
-            omsdetail_div.append(omsdetail_table_div);
+            omsinfo_table_div.append(omsinfo_table);
+            omscrit_table_div.append(omscrit_table);
+            omscontact_table_div.append(omscontact_table);
+            omsdetail_div.append(omsinfo_table_div);
+            omsdetail_div.append(omscontact_table_div);
+            omsdetail_div.append(omscrit_table_div);
             _obj.panel_group.append(omsdetail_div);
             _obj.panel_tabs.append('<li><a data-toggle="tab" href="#' + id + '">'+ i18n.t('dbk.omsdetail')+ '</a></li>');
         }
