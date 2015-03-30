@@ -474,7 +474,11 @@ dbkjs.util = {
         if (msg) {
             msg.html('<a href="' + e.src + '">' + e.src + '</a><br>' + i18n.t('dialogs.invalidImage'));
         }
-        e.src = dbkjs.basePath + "images/missing.gif";
+        if (dbkjs.viewmode === 'fullscreen') {
+            e.src = "images/missing.gif";
+        } else {
+            e.src = dbkjs.basePath + "images/missing.gif";
+        }
         e.onerror = "";
         return true;
     },
@@ -761,10 +765,14 @@ dbkjs.util = {
         var modal_content = $('<div class="modal-content"></div>');
         var modal_header = $('<div id="' + id + '_h" class="modal-header"><h4 class="modal-title">' + title + '</h4></div>');
         var modal_body = $('<div id="' + id + '_b" class="modal-body"></div>');
-        var modal_footer = $('<div id="' + id + '_f" class="modal-footer"></div>');
+        if (dbkjs.viewmode !== 'fullscreen') {
+          var modal_footer = $('<div id="' + id + '_f" class="modal-footer"></div>');
+        };
         modal_content.append(modal_header);
         modal_content.append(modal_body);
-        modal_content.append(modal_footer);
+        if (dbkjs.viewmode !== 'fullscreen') {
+            modal_content.append(modal_footer);
+        };
         modal_wrapper.append(modal_dialog.append(modal_content));
         modal_wrapper.modal('hide');
         return modal_wrapper;

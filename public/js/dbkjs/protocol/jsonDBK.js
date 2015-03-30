@@ -239,10 +239,8 @@ dbkjs.protocol.jsonDBK = {
             _obj.constructTekstobject(dbkjs.options.feature);
 
 
-            if(!noZoom){
-                if(dbkjs.options.zoomToPandgeometrie) {
-                    dbkjs.modules.feature.zoomToPandgeometrie();
-                }
+            if(!noZoom && dbkjs.options.zoomToPandgeometrie) {
+                dbkjs.modules.feature.zoomToPandgeometrie();
             }
 
             if(dbkjs.viewmode === 'fullscreen') {
@@ -251,11 +249,13 @@ dbkjs.protocol.jsonDBK = {
                 dbkjs.gui.infoPanelShow();
             }
 
-            _obj.addMouseoverHandler("#bwvlist", _obj.layerBrandweervoorziening);
-            _obj.addMouseoutHandler("#bwvlist", _obj.layerBrandweervoorziening);
-            _obj.addMouseoverHandler("#gvslist", _obj.layerGevaarlijkestof);
-            _obj.addMouseoutHandler("#gvslist", _obj.layerGevaarlijkestof);
-            _obj.addRowClickHandler("#floorslist", "verdiepingen");
+            if(dbkjs.viewmode !== 'fullscreen') {
+                _obj.addMouseoverHandler("#bwvlist", _obj.layerBrandweervoorziening);
+                _obj.addMouseoutHandler("#bwvlist", _obj.layerBrandweervoorziening);
+                _obj.addMouseoverHandler("#gvslist", _obj.layerGevaarlijkestof);
+                _obj.addMouseoutHandler("#gvslist", _obj.layerGevaarlijkestof);
+                _obj.addRowClickHandler("#floorslist", "verdiepingen");
+            }
 
             _obj.processing = false;
         } else {

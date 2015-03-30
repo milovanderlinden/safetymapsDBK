@@ -119,7 +119,7 @@ dbkjs.modules.search = {
                 '<ul class="dropdown-menu pull-right" id="search_dropdown" role="menu">' +
                     '<li><a href="#" id="s_dbk"><i class="fa fa-building"></i> ' + i18n.t("search.dbk") + '</a></li>' +
                     '<li><a href="#" id="s_oms"><i class="fa fa-bell"></i> ' + i18n.t("search.oms") + '</a></li>' +
-                    '<li><a href="#" id="s_adres"><i class="fafa-home"></i> ' + i18n.t("search.address") + '</a></li>' +
+                    '<li><a href="#" id="s_adres"><i class="fa fa-home"></i> ' + i18n.t("search.address") + '</a></li>' +
                     '<li><a href="#" id="s_coord"><i class="fa fa-thumb-tack"></i> ' + i18n.t("search.coordinates") + '</a></li>' +
                 '</ul>' +
             '</span>'
