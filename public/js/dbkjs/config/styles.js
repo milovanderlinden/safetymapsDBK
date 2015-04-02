@@ -18,6 +18,8 @@
  *
  */
 
+/* global OpenLayers, imagesBase64 */
+
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
 dbkjs.config = dbkjs.config || {};
@@ -57,7 +59,7 @@ dbkjs.redrawScaledLayers = function () {
  * @returns {Number|dbkjs.options.originalScaledbkjs.options.originalScale|
  */
 dbkjs.scaleStyleValue = function (value, featureAttributeValue, attributeScaleFactor) {
-    if (featureAttributeValue !== undefined) {
+    if (featureAttributeValue) {
         attributeScaleFactor = attributeScaleFactor ? attributeScaleFactor : 1;
         value = featureAttributeValue * attributeScaleFactor;
     }
@@ -92,8 +94,7 @@ dbkjs.config.styles = {
                     } else {
                         if (dbkjs.options.alwaysShowDbkFeature) {
                             // Always show feature except the active feature
-                            var activeFeature = dbkjs.modules.feature.getActive();
-                            if (activeFeature && feature.id === activeFeature.id) {
+                            if (dbkjs.options.dbk && feature.attributes.identificatie === dbkjs.options.dbk) {
                                 return "none";
                             } else {
                                 return "true";
@@ -135,7 +136,7 @@ dbkjs.config.styles = {
                     }
                 },
                 myfontsize: function (feature) {
-                    return "16px";
+                    return "10.5px";
                 },
                 mylabelalign: function (feature) {
                     if (feature.cluster) {
