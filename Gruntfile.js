@@ -1,3 +1,5 @@
+/* global global, module */
+
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -12,9 +14,50 @@ module.exports = function (grunt) {
                                 expand: true
                             },
                             {
+                                cwd: 'public/data',
+                                src: ['organisation.sample.json'],
+                                dest: 'build/data',
+                                expand: true
+                            },
+                            {
                                 cwd: 'public/js',
-                                src: ['dbk.min.js'],
+                                src: [
+                                    'dbk.min.js',
+                                    'dbkjs/config/options-rd.js'
+                                ],
                                 dest: 'build/js',
+                                expand: true
+                            },
+                            {
+                                cwd: 'public/js/libs',
+                                src: [
+                                    'jquery-1.11.0/jquery-1.11.0.min.js',
+                                    'bootstrap-3.2.0-dist/js/bootstrap.min.js',
+                                    'bootstrap-slider.js', 
+                                    'proj4js-compressed.js',
+                                    'OpenLayers-2.13.1/OpenLayers.js',
+                                    'moment/moment.min.js',
+                                    'moment/lang/nl.js'
+                                ],
+                                dest: 'build/js/libs',
+                                expand: true
+                            },
+                            {
+                                cwd: 'public/font-awesome-4.1.0/css',
+                                src: ['font-awesome.min.css'],
+                                dest: 'build/font-awesome-4.1.0/css',
+                                expand: true
+                            },
+                            {
+                                cwd: 'public/font-awesome-4.1.0/css',
+                                src: ['font-awesome.min.css'],
+                                dest: 'build/font-awesome-4.1.0/css',
+                                expand: true
+                            },
+                            {
+                                cwd: 'public/font-awesome-4.1.0/fonts',
+                                src: ['*'],
+                                dest: 'build/font-awesome-4.1.0/fonts',
                                 expand: true
                             },
                             {
@@ -122,7 +165,10 @@ module.exports = function (grunt) {
                 if (json.organisation) {
                     //skip wms
                     delete json.organisation.wms;
-
+                    json.organisation.wms = [];
+                    //skip care
+                    delete json.organisation.care;
+                    delete json.organisation.modules.care;
                     grunt.file.write('build/api/organisation.json', JSON.stringify(json));
 
                     cb();
@@ -156,13 +202,21 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('index', 'Export index page to index.html in build', function () {
         var cb = this.async();
-        var indexroute = require('./routes/index.js');
-        indexroute.indexy({}, {render: function (render) {
-                console.log(render);
-                cb();
-            }
-        });
+        var request = require('supertest');
+        var server = require('./server.js');
+        server.app.set('env', 'production');
+        request(server.app).get('/')
+                .end(function (err, res) {
+                    if (err) {
+                        console.log("Could not create index.html");
+                    } else {
+                        console.log('build/index.html created');
+                        grunt.file.write('build/index.html', res.text);
+
+                    }
+                });
     });
-    grunt.registerTask('default', ['clean', 'cssmin', 'uglify', 'copy']);
+    grunt.registerTask('default', ['clean', 'cssmin', 'uglify']);
+    grunt.registerTask('offline', ['default', 'organisation', 'features', 'copy', 'index']);
 };
 
