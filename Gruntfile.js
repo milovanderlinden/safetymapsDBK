@@ -140,6 +140,17 @@ module.exports = function (grunt) {
                         'public/css/slider.css'
                     ]
                 }
+            },
+            mobile: {
+                files: {
+                    'build/css/dbk.min.css': [
+                        'public/css/dbkm.css',
+                        'public/js/libs/bootstrap-3.2.0-dist/css/bootstrap.css',
+                        'public/css/daterangepicker-bs3.css',
+                        'public/css/typeahead.js-bootstrap.css',
+                        'public/css/slider.css'
+                    ]
+                }
             }
         }
     });
@@ -195,7 +206,8 @@ module.exports = function (grunt) {
         global.pool = anyDB.createPool(dbURL, {min: 2, max: 20});
         dbkcontroller.getFeatures({params: {id: 0}, query: {srid: 28992}}, {json: function (json) {
                 grunt.file.write('build/api/features.json', JSON.stringify(json));
-                //loop through the features to grab single files.
+                // @todo loop through the features to grab single files and store them offline
+                    // @todo loop through media and pull offline
                 cb();
             }
         });
@@ -212,11 +224,11 @@ module.exports = function (grunt) {
                     } else {
                         console.log('build/index.html created');
                         grunt.file.write('build/index.html', res.text);
-
+                        cb();
                     }
                 });
     });
-    grunt.registerTask('default', ['clean', 'cssmin', 'uglify']);
-    grunt.registerTask('offline', ['default', 'organisation', 'features', 'copy', 'index']);
+    grunt.registerTask('default', ['cssmin:combine', 'uglify']);
+    grunt.registerTask('offline', ['clean','cssmin:mobile', 'uglify', 'organisation', 'features', 'copy', 'index']);
 };
 
