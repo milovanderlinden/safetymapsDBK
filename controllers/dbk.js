@@ -18,8 +18,17 @@
  *
  */
 
+/* global exports, global */
+
+/**
+ * Get the settings for the organisation from the database based on 
+ * the database connection defined in config.json or config.default.json
+ * 
+ * @param {type} req
+ * @param {type} res
+ * @returns organisation settings for the application
+ */
 exports.getOrganisation = function(req, res) {
-    //where identificatie = 1369659645
     if (req.query) {
         srid = req.query.srid;
         if(!srid){
@@ -39,8 +48,15 @@ exports.getOrganisation = function(req, res) {
     }
 };
 
+/**
+ * Select an object from the database by id. takes srid as parameter. 
+ * If srid is undefined, falls back to WGS84
+ * 
+ * @param {type} req
+ * @param {type} res
+ * @returns object
+ */
 exports.getObject = function(req, res) {
-    //where identificatie = 1369659645
     if (req.query) {
         id = req.params.id;
         srid = req.query.srid;
@@ -62,7 +78,6 @@ exports.getObject = function(req, res) {
 };
 
 exports.getGebied = function(req, res) {
-    //where identificatie = 1369659645
     if (req.query) {
         id = req.params.id;
         srid = req.query.srid;
@@ -82,8 +97,8 @@ exports.getGebied = function(req, res) {
         );
     }
 };
+
 exports.getFeatures = function(req, res) {
-    //where identificatie = 1369659645
     if (req.query) {
         srid = req.query.srid;
         if(!srid){
@@ -112,7 +127,12 @@ exports.getFeatures = function(req, res) {
     }
 };
 
-// Compact arrays with null entries; delete keys from objects with null value
+/**
+ * Compact arrays with null entries; delete keys from objects with null value
+ * 
+ * @param {json} data
+ * @returns data with nulls removed.
+ */
 var removeNulls = function(data){
   var y;
   for (var x in data) {

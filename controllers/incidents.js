@@ -17,6 +17,9 @@
  *  along with safetymapDBK. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+/* global exports, global */
+
 /**
  * 
  * @param {type} req

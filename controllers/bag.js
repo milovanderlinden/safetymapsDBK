@@ -18,11 +18,14 @@
  *
  */
 
+/* global exports, global */
+
 String.prototype.toProperCase = function () {
     return this.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 };
+
 exports.getVersion = function (req, res) {
     //var query_str = 'select * from "dbk"."DBKObject_Feature" d JOIN (select * from "dbk"."type_aanwezigheidsgroep") t   ;';
     var query_str = 'select waarde as bag_update from bag_actueel.nlx_bag_info where sleutel=$1';
@@ -41,16 +44,12 @@ exports.getVersion = function (req, res) {
 };
 
 exports.getAdres = function (req, res) {
-    //console.log(req);
-    //where adresseerbaarobject = 14200010788752
-
     if (req.query) {
         id = req.params.id;
         srid = req.query.srid;
         if (!srid) {
             srid = 4326;
         }
-        //var query_str = 'select * from "dbk"."DBKObject_Feature" d JOIN (select * from "dbk"."type_aanwezigheidsgroep") t   ;';
         var query_str = 'select a.openbareruimtenaam, a.huisnummer, a.huisletter, a.huisnummertoevoeging, a.postcode, a.woonplaatsnaam, ' +
                 'a.gemeentenaam, a.provincienaam, a.typeadresseerbaarobject, a.adresseerbaarobject, a.nummeraanduiding, a.nevenadres, ' +
                 'st_asgeojson(st_force2d(st_transform(a.geopunt,$2))) geopunt, vp.gerelateerdpand as pand ' +
@@ -104,8 +103,6 @@ exports.getAdres = function (req, res) {
 };
 
 exports.getPanden = function (req, res) {
-    //console.log(req);
-    //where adresseerbaarobject = 796010000436352
     if (req.query) {
         id = req.params.id;
         srid = req.query.srid;
@@ -157,8 +154,7 @@ exports.getPanden = function (req, res) {
 };
 
 exports.autoComplete = function (req, res) {
-    //console.log(req);
-    //where adresseerbaarobject = 796010000436352
+    // @todo Check to see if the database is up. If not, fall back to nominatim!
     if (req.query) {
         searchphrase = req.params.searchphrase;
         if (searchphrase.length > 2) {
@@ -185,7 +181,6 @@ exports.autoComplete = function (req, res) {
                     "from bag_actueel.adres where " +
                     whereclause +
                     "group by woonplaatsnaam, gemeentenaam, openbareruimtenaam limit 10";
-            //( textsearchable_adres @@ to_tsquery('dutch','spinellihof $1 limit 1';
             global.bag.query(query_str, [finalsearch, srid],
                     function (err, result) {
                         if (err) {
@@ -205,20 +200,16 @@ exports.autoComplete = function (req, res) {
                                         "from bag_actueel.adres where " +
                                         whereclause +
                                         "group by woonplaatsnaam, gemeentenaam, openbareruimtenaam, huisnummer, huisletter, huisnummertoevoeging, postcode limit 10";
-                                //console.log(query_str);
-                                //( textsearchable_adres @@ to_tsquery('dutch','spinellihof $1 limit 1';
                                 global.bag.query(query_str, [finalsearch, srid],
                                         function (err, result) {
                                             if (err) {
                                                 res.status(400).json(err);
                                             } else {
-                                                //If the result is only one record, rerun it to get more details!
                                                 res.json(result.rows);
                                             }
                                             return;
                                         });
                             } else {
-
                                 res.json(result.rows);
                             }
                         }

@@ -18,6 +18,8 @@
  *
  */
 
+/* global exports, require, global */
+
 exports.validate_GET = function(req, res) {
     var token = req.params.token;
     checkToken(token, res);
