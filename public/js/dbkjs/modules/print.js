@@ -18,17 +18,67 @@
  *
  */
 
+/* global OpenLayers, i18n */
+
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
 
 dbkjs.modules.print = {
     id: 'dbk.modules.print',
+    rotation: 0,
+    scale: 1,
+    printbox: null,
     register: function (options) {
         var _obj = dbkjs.modules.print;
         _obj.printDialog('#printpanel_b');
         _obj.namespace = options.namespace || _obj.namespace;
         _obj.url = options.url || _obj.url;
         _obj.visibility = options.visible || _obj.visibility;
+        _obj.layer = new OpenLayers.Layer.Vector('print', {
+            styleMap: new OpenLayers.StyleMap({
+                // a nice style for the transformation box
+                "default": new OpenLayers.Style({
+                    fillOpacity: 0
+                }),
+                "transform": new OpenLayers.Style({
+                    display: "${getDisplay}",
+                    cursor: "${role}",
+                    pointRadius: 5,
+                    fillColor: "white",
+                    fillOpacity: 1,
+                    strokeColor: "#ff0000"
+                }, {
+                    context: {
+                        getDisplay: function (feature) {
+                            // hide the resize handle at the south-east corner
+                            return feature.attributes.role === "se-resize" ? "none" : "";
+                        }
+                    }
+                }),
+                "rotate": new OpenLayers.Style({
+                    display: "${getDisplay}",
+                    pointRadius: 10,
+                    fillColor: "#ddd",
+                    fillOpacity: 1,
+                    strokeColor: "#ff0000"
+                }, {
+                    context: {
+                        getDisplay: function (feature) {
+                            // only display the rotate handle at the south-east corner
+                            return feature.attributes.role === "se-rotate" ? "" : "none";
+                        }
+                    }
+                })
+            })
+        });
+        dbkjs.map.addLayer(_obj.layer);
+        _obj.printcontrol = new OpenLayers.Control.TransformFeature(_obj.layer, {
+            renderIntent: "transform",
+            rotationHandleSymbolizer: "rotate",
+            preserveAspectRatio: true,
+            dragControl: new OpenLayers.Control.DragFeature()
+        });
+        dbkjs.map.addControl(_obj.printcontrol);
         $('#btngrp_3').append(
                 '<a id="btn_print" class="btn btn-default navbar-btn" href="#" title="' +
                 i18n.t('app.print') +
@@ -36,27 +86,79 @@ dbkjs.modules.print = {
                 );
 
         $('#btn_print').click(function () {
-//            polyOptions = {sides: 4};
-//            polygonControl = new OpenLayers.Control.DrawFeature(_obj.layer,
-//                    OpenLayers.Handler.RegularPolygon,
-//                    {handlerOptions: polyOptions});
-//
-//            dbkjs.map.addControl(polygonControl);
-//            function setOptions(options) {
-//                polygonControl.handler.setOptions(options);
-//            }
-//            function setSize(fraction) {
-//                var radius = fraction * dbkjs.map.getExtent().getHeight();
-//                polygonControl.handler.setOptions({radius: radius,
-//                    angle: 0});
-//            }
-//            polygonControl.activate();
-            _obj.doPrint();
+            _obj.layer.destroyFeatures();
+
+            dbkjs.util.alert('<i class="fa fa-warning"></i>', '<span id="printclick">' + i18n.t('testprint-click-here') + "</span>", 'alert-danger');
+
+            //first move the layer to the top!
+            dbkjs.selectControl.deactivate();
+            dbkjs.map.setLayerIndex(_obj.layer, dbkjs.map.getNumLayers());
+            var bounds = dbkjs.map.getExtent();
+            var res = dbkjs.map.getResolution();
+            var size = dbkjs.map.getSize();
+            var w = size.w - 200;
+            var h = Math.round(w / 1.468);
+            var min = dbkjs.map.getLonLatFromViewPortPx({x: 0 + 200, y: h});
+            var max = dbkjs.map.getLonLatFromViewPortPx({x: w, y: 0 + 200});
+
+            var r = dbkjs.util.gcd(w, h);
+            console.log("dimensions: " + w + "x" + h);
+            console.log("gcd: " + r);
+            console.log("aspect ratio: " + w / r + ":" + h / r + ' (need 1.468:1)');
+            if (w > h) {
+                console.log("landscape");
+            } else {
+                console.log("portrait");
+            }
+            var ring = [
+                new OpenLayers.Geometry.Point(min.lon, min.lat),
+                new OpenLayers.Geometry.Point(min.lon, max.lat),
+                new OpenLayers.Geometry.Point(max.lon, max.lat),
+                new OpenLayers.Geometry.Point(max.lon, min.lat)
+            ];
+            var printfeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing(ring)]), {});
+            _obj.layer.addFeatures([printfeature]);
+            _obj.printbox = printfeature;
+
+            dbkjs.map.addControl(_obj.printcontrol);
+
+
+            _obj.printcontrol.setFeature(printfeature);
+            _obj.printcontrol.activate();
+            _obj.printcontrol.events.register("transformcomplete", _obj, _obj.transformComplete);
+            _obj.printcontrol.events.register("transform", _obj, _obj.transform);
+
+            $('#printclick').click(function () {
+                _obj.printcontrol.deactivate();
+                dbkjs.selectControl.activate();
+                _obj.doPrint();
+            });
+            _obj.printcontrol.activate();
         });
-        this.layer = new OpenLayers.Layer.Vector('print');
-        dbkjs.map.addLayer(this.layer);
+
+
+    },
+    transform: function (evt) {
+        var _obj = dbkjs.modules.print;
+        if (evt.rotation) {
+            _obj.rotation -= evt.rotation;
+        }
+
+
+    },
+    transformComplete: function (evt) {
+        var _obj = dbkjs.modules.print;
+        _obj.printbox = evt.feature;
+
     },
     doPrint: function () {
+        var _obj = dbkjs.modules.print;
+        var myBox = [
+            _obj.printbox.geometry.getBounds().left,
+            _obj.printbox.geometry.getBounds().bottom,
+            _obj.printbox.geometry.getBounds().right,
+            _obj.printbox.geometry.getBounds().top
+        ];
         dbkjs.util.alert('<i class="fa fa-spinner fa-spin"></i>', i18n.t('dialogs.print'), 'alert-warning');
         if (!dbkjs.util.isJsonNull(dbkjs.options.dbk) && dbkjs.options.dbk !== 0) {
             var currentFeature = dbkjs.options.feature;
@@ -65,7 +167,7 @@ dbkjs.modules.print = {
                     "units": "m",
                     "srs": "EPSG:28992",
                     "layout": "A3 Landscape",
-                    "dpi": 150,
+                    "dpi": 96,
                     "mapTitle": dbkjs.options.organisation.title,
                     "titlepage": true
                 },
@@ -76,15 +178,18 @@ dbkjs.modules.print = {
             testObject.options.informatie = {};
             testObject.options.informatie.columns = ["soort", "tekst"];
             testObject.options.informatie.data = [];
-            //remove unwanted stuff if available
             if (currentFeature.adres) {
                 if (currentFeature.adres.length > 0) {
                     var adr_str = '';
                     $.each(currentFeature.adres, function (adr_index, adr) {
-                        adr_str += adr.openbareRuimteNaam + ' ' + adr.huisnummer +
-                                adr.huisnummertoevoeging + adr.huisletter + '\n' +
-                                adr.postcode + ' ' + adr.woonplaatsNaam + ' ' + adr.gemeenteNaam +
-                                '\n\n';
+                        var street = adr.openbareRuimteNaam + ' ' || '';
+                        var number = adr.huisnummer || '';
+                        var ad1 = adr.huisnummertoevoeging || '';
+                        var ad2 = adr.huisletter || '';
+                        var postalcode = adr.postcode + ' ' || '';
+                        var place = adr.woonplaatsNaam + ' ' || '';
+                        var city = adr.gemeenteNaam || '';
+                        adr_str += street + ' ' + number + ad1 + ad2 + postalcode + place + city + '\n\n';
                     });
                     testObject.options.adres = adr_str;
                 }
@@ -142,11 +247,13 @@ dbkjs.modules.print = {
             if (currentFeature.contact) {
                 if (currentFeature.contact.length > 0) {
                     var adr_str = '';
+                    //maximum of 6 contacts. Otherwise it will mess up print format.
                     $.each(currentFeature.contact, function (adr_index, adr) {
-                        adr_str += adr.naam + '\n' +
-                                adr.telefoonnummer + '\n' +
-                                '(' + adr.functie + ')\n\n';
+                        //trim the telephone number to 25 chars.
+                        var tel = (adr.telefoonnummer + Array(25).join(' ')).slice(-25);
+                        adr_str += tel + ' ' + adr.naam + ' ' + '(' + adr.functie + ')\n';
                     });
+                    //cut the address at max-string length (45 chars at max)
                     testObject.options.contact = adr_str;
                 }
             }
@@ -203,16 +310,18 @@ dbkjs.modules.print = {
                 delete testObject.options.informatie;
             }
 
-            var center = dbkjs.map.getCenter();
-            testObject.pages[0].center = [center.lon, center.lat];
-            testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
-            //testObject.pages[0].bbox = Math.ceil(dbkjs.map.getScale());
-            testObject.pages[0].rotation = 0;
-            //@TODO: show a square that the user can resize and rotate and create a minimalistic printing dialog
+            //var center = dbkjs.map.getCenter();
+            //testObject.pages[0].center = [center.lon, center.lat];
+            //testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
+            testObject.pages[0].bbox = myBox;
+            testObject.pages[0].rotation = _obj.rotation;
             dbkjs.modules.print.printdirect(dbkjs.map,
                     testObject.pages,
                     testObject.options);
         } else {
+            //voer verschillende controlles uit alvorens de betreffende layout te selecteren
+            // A3 Landscape; ruimte voor 2 foto's
+            // A3 Geenfoto; fotoruimte verwijderd en vrijgegeven voor gevaarlijke stoffen.
             var testObject = {
                 "options": {
                     "units": "m",
@@ -223,10 +332,11 @@ dbkjs.modules.print = {
                 },
                 "pages": [{}]
             };
-            var center = dbkjs.map.getCenter();
-            testObject.pages[0].center = [center.lon, center.lat];
-            testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
-            testObject.pages[0].rotation = 0;
+            //var center = dbkjs.map.getCenter();
+            //testObject.pages[0].center = [center.lon, center.lat];
+            //testObject.pages[0].scale = Math.ceil(dbkjs.map.getScale());
+            testObject.pages[0].bbox = myBox;
+            testObject.pages[0].rotation = _obj.rotation;
             dbkjs.modules.print.printdirect(dbkjs.map, testObject.pages, testObject.options);
         }
     },
@@ -298,8 +408,7 @@ dbkjs.modules.print = {
         $.each(pages, function (page_idx, page) {
             encodedPages.push(
                     $.extend(page.customParams, {
-                        center: [page.center[0], page.center[1]],
-                        scale: page.scale,
+                        bbox: page.bbox,
                         rotation: page.rotation
                     })
                     );
@@ -325,18 +434,19 @@ dbkjs.modules.print = {
             data: JSON.stringify(jsonData),
             dataType: "json",
             success: function (response) {
+                _obj.layer.destroyFeatures();
+                _obj.printbox.destroy();
                 var url = response.getURL;
                 var url_arr = url.split('/');
                 var filename = url_arr[url_arr.length - 1];
                 var newURL = "/print/pdf/" + filename;
                 dbkjs.util.alert('<a href="' + newURL + '"><i class="fa fa-file-pdf-o fa-2x"></i></a> ', i18n.t('dialogs.printready') + ' ' +
-                        '<a href="' + newURL + '">' + 
+                        '<a href="' + newURL + '">' +
                         i18n.t('dialogs.downloadpdf') + '</a>.', 'alert-success');
                 //_obj.download(response.getURL);
             },
             error: function (response) {
-                dbkjs.util.alert('<i class="fa fa-warning"></i>', i18n.t('dialogs.printerror') , 'alert-error');
-                //alert(response.responseText);
+                dbkjs.util.alert('<i class="fa fa-warning"></i>', i18n.t('dialogs.printerror'), 'alert-danger');
             }
         });
     },
@@ -376,7 +486,7 @@ dbkjs.modules.print = {
                 }
             },
             error: function (response) {
-                alert(response.responseText);
+                dbkjs.util.alert('<i class="fa fa-warning"></i>', i18n.t('dialogs.printtimeout'), 'alert-danger');
             }
         });
 

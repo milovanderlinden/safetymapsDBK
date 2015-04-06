@@ -57,6 +57,8 @@ dbkjs.options = {
         xy_precision: 3,
         maxExtent: new OpenLayers.Bounds(-65200.96, 242799.04, 375200.96, 68320096),
         units: "m"
+        //zoomMethod: null,
+        //fractionalZoom: true
         }
     }
 };

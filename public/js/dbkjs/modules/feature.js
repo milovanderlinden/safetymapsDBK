@@ -18,6 +18,8 @@
  *
  */
 
+/* global i18n */
+
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
 dbkjs.modules = dbkjs.modules || {};
@@ -50,6 +52,10 @@ dbkjs.modules.feature = {
 //    }),
     caches: {},
     getActive: function() {
+        var _obj = dbkjs.modules.feature;
+        if (_obj.active){
+            return feature;
+        } else {
         var _obj = dbkjs.modules.feature;
         var feature;
         var _search_field = 'identificatie';
@@ -88,6 +94,7 @@ dbkjs.modules.feature = {
                 return false;
             }
         }
+    }
     },
     register: function(options) {
         var _obj = dbkjs.modules.feature;
@@ -153,7 +160,7 @@ dbkjs.modules.feature = {
         }).fail(function( jqxhr, textStatus, error ) {
             $('#btn_refresh > i').removeClass('fa-spin');
             dbkjs.options.feature = null;
-            dbkjs.gui.showError('Features konden niet worden ingelezen');
+            dbkjs.gui.showError(" " + i18n.t('app.errorfeatures'));
         });
     },
     featureInfohtml: function(feature) {
