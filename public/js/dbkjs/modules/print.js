@@ -88,7 +88,7 @@ dbkjs.modules.print = {
         $('#btn_print').click(function () {
             _obj.layer.destroyFeatures();
 
-            dbkjs.util.alert('<i class="fa fa-warning"></i>', '<span id="printclick">' + i18n.t('testprint-click-here') + "</span>", 'alert-danger');
+            dbkjs.util.alert(i18n.t('print.selectarea'), '<button class="btn btn-primary" id="printclick">' + i18n.t('app.print') + "</button>", 'alert-info');
 
             //first move the layer to the top!
             dbkjs.selectControl.deactivate();
