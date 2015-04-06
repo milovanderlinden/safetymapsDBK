@@ -1,3 +1,5 @@
+/* global exports, require, global */
+
 /**
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
  * 
@@ -142,7 +144,7 @@ function setup(app) {
             x.on('error', function (err) {
                 res.status(400).json({
                     "error": "Timeout on proxy"
-                })
+                });
             });
         } else {
             res.status(400).json({"error": "wrong use of proxy"});
@@ -153,7 +155,7 @@ function setup(app) {
 }
 
 exports.setup = setup;
-exports.indexy = index;
+exports.index = index;
 exports.checkToken = checkToken;
 exports.eughs = eughs;
 exports.nen1414 = nen1414;
