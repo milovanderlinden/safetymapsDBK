@@ -1,3 +1,5 @@
+/* global global, __dirname, exports, process */
+
 /**
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
  * 
@@ -27,7 +29,8 @@ var express = require('express'),
         i18n = require('i18next'),
         anyDB = require('any-db'),
         fs = require('fs'),
-        compress = require('compression');;
+        compress = require('compression');
+;
 
 global.conf = require('nconf');
 // First consider commandline arguments and environment variables, respectively.
@@ -63,9 +66,18 @@ var bagURL = 'postgres://' +
         global.conf.get('bag:host') + ':' +
         global.conf.get('bag:port') + '/' +
         global.conf.get('bag:dbname');
-
+if (global.conf.get('infrastructure:user')) {
+    var infraURL = 'postgres://' +
+            global.conf.get('infrastructure:user') + ':' +
+            global.conf.get('infrastructure:password') + '@' +
+            global.conf.get('infrastructure:host') + ':' +
+            global.conf.get('infrastructure:port') + '/' +
+            global.conf.get('infrastructure:dbname');
+    global.infra = anyDB.createPool(infraURL, {min: 2, max: 20});
+}
 global.pool = anyDB.createPool(dbURL, {min: 2, max: 20});
 global.bag = anyDB.createPool(bagURL, {min: 2, max: 20});
+
 
 var app = express(
 //    {
@@ -86,7 +98,7 @@ app.configure('production', function () {
 // Configuration
 app.configure(function () {
     app.set('port', process.env.PORT || global.conf.get('http:port'));
-    app.use(compress());  
+    app.use(compress());
     app.enable('trust proxy');
     app.use(i18n.handle);
     app.set('views', __dirname + '/views');

@@ -1,22 +1,24 @@
 /*!
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
  *
- *  This file is part of safetymapDBK
+ *  This file is part of opendispatcher
  *
- *  safetymapDBK is free software: you can redistribute it and/or modify
+ *  opendispatcher is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  safetymapDBK is distributed in the hope that it will be useful,
+ *  opendispatcher is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with safetymapDBK. If not, see <http://www.gnu.org/licenses/>.
+ *  along with opendispatcher. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+/* global OpenLayers, i18n */
 
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
@@ -67,6 +69,7 @@ dbkjs.modules.search = {
                 '<li><a href="#" id="s_oms"><i class="fa fa-bell"></i> ' + i18n.t("search.oms") + '</a></li>' +
                 '<li><a href="#" id="s_adres"><i class="fa fa-home"></i> ' + i18n.t("search.address") + '</a></li>' +
                 '<li><a href="#" id="s_coord"><i class="fa fa-thumb-tack"></i> ' + i18n.t("search.coordinates") + '</a></li>' +
+                '<li><a href="#" id="s_infra"><i class="fa fa-car"></i> ' + i18n.t("search.infrastructure") + '</a></li>' +
                 '</ul>' +
                 '</div>'
         );
@@ -121,6 +124,7 @@ dbkjs.modules.search = {
                     '<li><a href="#" id="s_oms"><i class="fa fa-bell"></i> ' + i18n.t("search.oms") + '</a></li>' +
                     '<li><a href="#" id="s_adres"><i class="fa fa-home"></i> ' + i18n.t("search.address") + '</a></li>' +
                     '<li><a href="#" id="s_coord"><i class="fa fa-thumb-tack"></i> ' + i18n.t("search.coordinates") + '</a></li>' +
+                    '<li><a href="#" id="s_infra"><i class="fa fa-car"></i> ' + i18n.t("search.infrastructure") + '</a></li>' +
                 '</ul>' +
             '</span>'
         );
@@ -385,6 +389,72 @@ dbkjs.modules.search = {
                 mbtn.html('<i class="fa fa-bell"></i>');
                 minp.attr("placeholder", i18n.t("search.omsplaceholder"));
                 dbkjs.modules.feature.search_oms();
+            } else if (searchtype === i18n.t("search.infrastructure")) {
+                mbtn.html('<i class="fa fa-car"></i>');
+                minp.attr("placeholder", i18n.t("search.infraplaceholder"));
+                 if (dbkjs.modules.search) {
+                    dbkjs.modules.search.activateinfra();
+                }
+            }
+            mdiv.removeClass('open');
+            mdiv.removeClass('active');
+            return false;
+        });
+    },
+    activateinfra: function() {
+        var _obj = dbkjs.modules.search;
+        $('#search_input').typeahead({
+            name: 'infra',
+            remote: {
+                //url: 'nominatim?format=json&countrycodes=nl&addressdetails=1&q=%QUERY',
+                url: 'api/autocomplete/autoweg/%QUERY',
+                filter: function(parsedResponse) {
+                    return _obj.parseAddressResponse(parsedResponse);
+                }
+            }
+        });
+        $('#search_input').bind('typeahead:selected', function(obj, datum) {
+            dbkjs.modules.updateFilter(datum.id);
+            _obj.zoomAndPulse(datum.geometry.getBounds().getCenterLonLat());
+        });
+        $('#search_dropdown a').click(function(e) {
+            $('#search_input').typeahead('destroy');
+            $('#search_input').val('');
+            var mdiv = $(this).parent().parent().parent();
+            var mbtn = $('#search-add-on');
+            var minp = mdiv.parent().find('input');
+            var searchtype = $(this).text().trim();
+            if (searchtype === i18n.t("search.i")) {
+                mbtn.html('<i class="fa fa-home"></i>');
+                minp.attr("placeholder", i18n.t("search.addressplaceholder"));
+                if (dbkjs.modules.search) {
+                    dbkjs.modules.search.activate();
+                }
+            } else if (searchtype === i18n.t("search.coordinates")) {
+                mbtn.html('<i class="fa fa-thumb-tack"></i>');
+                minp.attr("placeholder", i18n.t("search.coordplaceholder"));
+                $('#search_input').change(function() {
+                    var loc = _obj.handleCoordinatesSearch();
+                    if(loc) {
+                        dbkjs.modules.updateFilter(0);
+                        _obj.zoomAndPulse(loc);
+                    }
+                    return false;
+                });
+            } else if (searchtype === i18n.t("search.dbk")) {
+                mbtn.html('<i class="fa fa-building"></i>');
+                minp.attr("placeholder", i18n.t("search.dbkplaceholder"));
+                dbkjs.modules.feature.search_dbk();
+            } else if (searchtype === i18n.t("search.oms")) {
+                mbtn.html('<i class="fa fa-bell"></i>');
+                minp.attr("placeholder", i18n.t("search.omsplaceholder"));
+                dbkjs.modules.feature.search_oms();
+            } else if (searchtype === i18n.t("search.infrastructure")) {
+                mbtn.html('<i class="fa fa-car"></i>');
+                minp.attr("placeholder", i18n.t("search.infraplaceholder"));
+                 if (dbkjs.modules.search) {
+                    dbkjs.modules.search.activateinfra();
+                }
             }
             mdiv.removeClass('open');
             mdiv.removeClass('active');

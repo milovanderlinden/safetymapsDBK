@@ -209,13 +209,15 @@
     "search": {
         "search": "Zoek",
         "dbk": "DBK",
-        "dbkplaceholder": "Zoek DBK",
+        "dbkplaceholder": "DBK naam",
         "oms": "OMS",
-        "omsplaceholder": "Zoek OMS",
+        "omsplaceholder": "OMS nummer",
         "address": "Adres",
-        "addressplaceholder": "Zoek adres",
+        "addressplaceholder": "Adres",
         "coordinates": "Coordinaten",
-        "coordplaceholder": "Lon,lat of X,Y punt voor decimaal"
+        "coordplaceholder": "Lon,lat of X,Y punt voor decimaal",
+        "infrastructure": "Hectometer",
+        "infraplaceholder": "Naam en hectometer"
     },
     "gms":{
         "gms": "Melding"
