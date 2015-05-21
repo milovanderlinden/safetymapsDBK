@@ -18,6 +18,8 @@
  *
  */
 
+/* global OpenLayers */
+
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
 dbkjs.Layer = dbkjs.Class({
@@ -106,7 +108,7 @@ dbkjs.Layer = dbkjs.Class({
                 newparent = nameArray[0];
                 name = nameArray[1];
             }
-
+            
             // @todo functie maken om layerindex dynamisch te toveren 0 is onderop de stapel
             if (index) {
                 dbkjs.map.setLayerIndex(this.layer, index);
