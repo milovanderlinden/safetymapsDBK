@@ -97,6 +97,24 @@ dbkjs.config.styles = {
                             if (dbkjs.options.dbk && feature.attributes.identificatie === dbkjs.options.dbk) {
                                 return "none";
                             } else {
+                                // Controleer of actieve DBK  meerdere verdiepingen heeft
+                                // en feature om display van te bepalen niet het hoofdobject
+                                // is van de actieve DBK. Zo ja, dan niet tonen
+                                // Gebied heeft geen verdiepingen
+                                if (dbkjs.options.feature && dbkjs.options.feature.verdiepingen && dbkjs.options.feature.verdiepingen.length > 1) {
+                                    // Het ID van de dbk waarvan we de display property
+                                    // bepalen
+                                    var verdiepingCheckDbkId = feature.attributes.identificatie;
+
+                                    // Loop over alle verdiepingen van actieve feature en check
+                                    // of verdieping id overeenkomt met dbkId
+                                    for (var i = 0; i < dbkjs.options.feature.verdiepingen.length; i++) {
+                                        var verdieping = dbkjs.options.feature.verdiepingen[i];
+                                        if (verdieping.identificatie === verdiepingCheckDbkId) {
+                                            return "none";
+                                        }
+                                    }
+                                }
                                 return "true";
                             }
                         } else {
@@ -208,7 +226,7 @@ dbkjs.config.styles = {
             fontColor: "${myfontcolor}"
         }, {
             context: {
-                myfontcolor: function (feature) {
+                myfontcolor: function(feature) {
                     if (feature.cluster) {
                         return "#fff722";
                     } else {
@@ -541,7 +559,7 @@ dbkjs.config.styles = {
             graphicName: "${mygraphic}"
         }, {
             context: {
-                myrotation: function (feature) {
+                myrotation: function(feature) {
                     if (feature.attributes.rotation) {
                         return -feature.attributes.rotation;
                     } else {
@@ -592,21 +610,21 @@ dbkjs.config.styles = {
             display: "${mydisplay}"
         }, {
             context: {
-                myicon: function (feature) {
+                myicon: function(feature) {
                     var img = "images/" + feature.attributes.namespace + "/" + feature.attributes.type + ".png";
                     return typeof imagesBase64 === 'undefined' ? dbkjs.basePath + img : imagesBase64[img];
                 },
-                myrotation: function (feature) {
+                myrotation: function(feature) {
                     if (feature.attributes.rotation) {
                         return -feature.attributes.rotation;
                     } else {
                         return 0;
                     }
                 },
-                myradius: function (feature) {
+                myradius: function(feature) {
                     return dbkjs.scaleStyleValue(12, feature.radius);
                 },
-                mydisplay: function (feature) {
+                mydisplay: function(feature) {
                     if (dbkjs.options.visibleCategories
                             && feature.attributes.category
                             && dbkjs.options.visibleCategories[feature.attributes.category] === false) {
@@ -621,7 +639,7 @@ dbkjs.config.styles = {
             pointRadius: "${myradius}"
         }, {
             context: {
-                myradius: function (feature) {
+                myradius: function(feature) {
                     return dbkjs.scaleStyleValue(20, feature.radius, 1.66);
                 }
             }
@@ -629,7 +647,7 @@ dbkjs.config.styles = {
             pointRadius: "${myradius}"
         }, {
             context: {
-                myradius: function (feature) {
+                myradius: function(feature) {
                     return dbkjs.scaleStyleValue(24, feature.radius, 2);
                 }
             }
@@ -641,10 +659,10 @@ dbkjs.config.styles = {
             externalGraphic: "${myicon}"
         }, {
             context: {
-                myradius: function (feature) {
+                myradius: function(feature) {
                     return dbkjs.scaleStyleValue(12);
                 },
-                myicon: function (feature) {
+                myicon: function(feature) {
                     var img = "images/" + feature.attributes.namespace + "/" + feature.attributes.type + ".png";
                     return typeof imagesBase64 === 'undefined' ? dbkjs.basePath + img : imagesBase64[img];
                 }
@@ -653,7 +671,7 @@ dbkjs.config.styles = {
             pointRadius: "${myradius}"
         }, {
             context: {
-                myradius: function (feature) {
+                myradius: function(feature) {
                     return dbkjs.scaleStyleValue(20);
                 }
             }
@@ -661,7 +679,7 @@ dbkjs.config.styles = {
             pointRadius: "${myradius}"
         }, {
             context: {
-                myradius: function (feature) {
+                myradius: function(feature) {
                     return dbkjs.scaleStyleValue(25);
                 }
             }
@@ -678,10 +696,10 @@ dbkjs.config.styles = {
             labelOutlineWidth: 1
         }, {
             context: {
-                mysize: function (feature) {
+                mysize: function(feature) {
                     return dbkjs.scaleStyleValue(12, feature.scale);
                 },
-                myRotation: function (feature) {
+                myRotation: function(feature) {
                     if (parseFloat(feature.attributes.rotation) !== 0.0) {
                         var ori = parseFloat(feature.attributes.rotation);
                         return -ori;

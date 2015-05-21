@@ -400,19 +400,12 @@ dbkjs.modules.search = {
             mdiv.removeClass('active');
             return false;
         });
-
-        if (this.viewmode !== 'fullscreen') {
-            // default handler
-            dbkjs.modules.feature.search_dbk();
-        }
-
     },
     activateinfra: function() {
         var _obj = dbkjs.modules.search;
         $('#search_input').typeahead({
             name: 'infra',
             remote: {
-                //url: 'nominatim?format=json&countrycodes=nl&addressdetails=1&q=%QUERY',
                 url: 'api/autocomplete/autoweg/%QUERY',
                 filter: function(parsedResponse) {
                     return _obj.parseAddressResponse(parsedResponse);
