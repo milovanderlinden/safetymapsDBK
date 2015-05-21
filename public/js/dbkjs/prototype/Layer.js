@@ -32,8 +32,6 @@ dbkjs.Layer = dbkjs.Class({
         var defaultparams = {
             format: 'image/png',
             transparent: true
-                    //tiled: true,
-                    //tilesorigin: [dbkjs.map.maxExtent.left, dbkjs.map.maxExtent.bottom]
         };
         var defaultoptions = {
             transitionEffect: 'resize',
@@ -55,6 +53,7 @@ dbkjs.Layer = dbkjs.Class({
 
         switch (layertype) {
             case "TMS":
+                console.log("this layer is a tms");
                 // XXX in json you can't create OpenLayers objects. The following
                 // properties in params are converted to OpenLayers objects here:
 
@@ -76,6 +75,12 @@ dbkjs.Layer = dbkjs.Class({
                         params,
                         options
                         );
+                ly.events.register("loadstart", ly, function () {
+                    dbkjs.util.loadingStart(ly);
+                });
+                ly.events.register("loadend", ly, function () {
+                    dbkjs.util.loadingEnd(ly);
+                });
                 break;
             case "WMS":
             default:
@@ -108,7 +113,7 @@ dbkjs.Layer = dbkjs.Class({
                 newparent = nameArray[0];
                 name = nameArray[1];
             }
-            
+
             // @todo functie maken om layerindex dynamisch te toveren 0 is onderop de stapel
             if (index) {
                 dbkjs.map.setLayerIndex(this.layer, index);
@@ -145,7 +150,7 @@ dbkjs.Layer = dbkjs.Class({
                             '</div>');
                 }
                 parent = '#' + findMyParent;
-            } 
+            }
             $(parent).append(this.div);
             $(parent).sortable({handle: '.panel'});
             if (this.layer) {

@@ -197,6 +197,7 @@ dbkjs.loadOrganisationCapabilities = function () {
                 if (!dbkjs.util.isJsonNull(wms_v.pl)) {
                     metadata.pl = wms_v.pl;
                 }
+                var layertype = wms_v.layertype || null;
                 var myLayer = new dbkjs.Layer(
                         wms_v.name,
                         wms_v.url,
@@ -204,7 +205,8 @@ dbkjs.loadOrganisationCapabilities = function () {
                         options,
                         parent,
                         index,
-                        metadata
+                        metadata,
+                        layertype
                         );
             } else {
                 var params = wms_v.params || {};
@@ -218,6 +220,7 @@ dbkjs.loadOrganisationCapabilities = function () {
                 if (!dbkjs.util.isJsonNull(wms_v.pl)) {
                     metadata.pl = wms_v.pl;
                 }
+                var layertype = wms_v.layertype || null;
                 var myLayer = new dbkjs.Layer(
                         wms_v.name,
                         wms_v.url,
@@ -225,7 +228,8 @@ dbkjs.loadOrganisationCapabilities = function () {
                         options,
                         parent,
                         index,
-                        metadata
+                        metadata,
+                        layertype
                         );
             }
 
