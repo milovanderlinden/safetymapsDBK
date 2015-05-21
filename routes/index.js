@@ -95,7 +95,6 @@ function checkToken(token, res) {
 
 function setup(app) {
     app.get('/', index);
-    //app.get('/batch', emailer.annotationbulk);
     app.get('/api/object/:id.json', dbk.getObject);
     app.post('/api/annotation', emailer.postAnnotation);
     app.get('/api/gebied/:id.json', dbk.getGebied);

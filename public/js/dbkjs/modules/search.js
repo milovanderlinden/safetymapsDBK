@@ -1,7 +1,7 @@
 /*!
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
  *
- *  This file is part of opendispatcher
+ *  This file is part of opendispatcher, safetymapsDBK is a derivative of opendispatcher
  *
  *  opendispatcher is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -400,6 +400,12 @@ dbkjs.modules.search = {
             mdiv.removeClass('active');
             return false;
         });
+
+        if (this.viewmode !== 'fullscreen') {
+            // default handler
+            dbkjs.modules.feature.search_dbk();
+        }
+
     },
     activateinfra: function() {
         var _obj = dbkjs.modules.search;
@@ -461,4 +467,5 @@ dbkjs.modules.search = {
             return false;
         });
     }
+
 };
