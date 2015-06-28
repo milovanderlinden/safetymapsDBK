@@ -129,24 +129,24 @@ dbkjs.Permalink =
             },
             updateLink: function () {
                 var separator = this.anchor ? '#' : '?';
-                var href = this.base;
+                var updateLinkhref = this.base;
                 var anchor = null;
-                if (href.indexOf("#") !== -1 && this.anchor === false) {
-                    anchor = href.substring(href.indexOf("#"), href.length);
+                if (updateLinkhref.indexOf("#") !== -1 && this.anchor === false) {
+                    anchor = updateLinkhref.substring(updateLinkhref.indexOf("#"), updateLinkhref.length);
                 }
-                if (href.indexOf(separator) !== -1) {
-                    href = href.substring(0, href.indexOf(separator));
+                if (updateLinkhref.indexOf(separator) !== -1) {
+                    updateLinkhref = updateLinkhref.substring(0, updateLinkhref.indexOf(separator));
                 }
-                var splits = href.split("#");
-                href = splits[0] + separator + OpenLayers.Util.getParameterString(this.createParams());
+                var splits = updateLinkhref.split("#");
+                updateLinkhref = splits[0] + separator + OpenLayers.Util.getParameterString(this.createParams());
                 if (anchor) {
-                    href += anchor;
+                    updateLinkhref += anchor;
                 }
                 if (this.anchor && !this.element) {
-                    window.location.href = href;
+                    window.location.href = updateLinkhref;
                 }
                 else {
-                    this.element.href = href;
+                    this.element.href = updateLinkhref;
                 }
             },
             createParams: function (center, zoom, layers) {
@@ -324,6 +324,7 @@ dbkjs.util = {
      * @param {<OpenLayers.Layer>} obj
      */
     toggleOverlay: function (obj) {
+        console.log(obj);
         var layers = dbkjs.map.getLayersByName(obj.name);
         if (layers.length === 1) {
             if (obj.checked === true) {

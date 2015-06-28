@@ -18,6 +18,8 @@
  *
  */
 
+/* global dbkjsbuildinfo, parseFloat */
+
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
 dbkjs.layout = {
@@ -81,9 +83,21 @@ dbkjs.layout = {
         $.getJSON(dbkjs.dataPath + 'bag/info').done(function(data) {
             if(data[0].bag_update){
                 $(parent).append(
-                '<p><hr/><strong>BAG datum</strong> ' + data[0].bag_update + '</p>'
+                '<p><hr/><strong>' + i18n.t('bag.updated') + '</strong> ' + data[0].bag_update + '</p>'
                 );
             }
+        });
+        $.getJSON(dbkjs.dataPath + 'infra/info').done(function(data) {
+            if(data[0].updated){
+                $(parent).append(
+                '<p><hr/><strong>' + i18n.t('infra.updated') + '</strong> ' + data[0].updated + '</p>'
+                );
+            } else {
+                //remove infra search
+                $( "#li_s_infra" ).remove();
+            }
+        }).fail(function(data){
+            $( "#li_s_infra" ).remove();
         });
 
         $(parent).append(

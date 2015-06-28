@@ -27,77 +27,22 @@ String.prototype.toProperCase = function () {
 };
 
 exports.getVersion = function (req, res) {
-    var query_str = 'select updated from current.update_info where dataset=$1';
-    global.bag.query(query_str, ['nwb'],
-            function (err, result) {
-                if (err) {
-                    res.status(400).json(err);
-                } else {
-                    for (index = 0; index < result.rows.length; ++index) {
-                    }
-                    res.json(result.rows);
-                }
-                return;
-            }
-    );
-};
-
-exports.getHectometer = function (req, res) {
-    if (req.query) {
-        id = req.params.id;
-        srid = req.query.srid;
-        if (!srid) {
-            srid = 4326;
-        }
-        var query_str = 'select a.openbareruimtenaam, a.huisnummer, a.huisletter, a.huisnummertoevoeging, a.postcode, a.woonplaatsnaam, ' +
-                'a.gemeentenaam, a.provincienaam, a.typeadresseerbaarobject, a.adresseerbaarobject, a.nummeraanduiding, a.nevenadres, ' +
-                'st_asgeojson(st_force2d(st_transform(a.geopunt,$2))) geopunt, vp.gerelateerdpand as pand ' +
-                'from bag_actueel.adres a left join bag_actueel.verblijfsobjectpand vp on a.adresseerbaarobject = vp.identificatie ' +
-                'where a.adresseerbaarobject = $1';
-        global.bag.query(query_str, [id, srid],
+    if (global.infra) {
+        var query_str = 'select updated from current.update_info where dataset=$1';
+        global.infra.query(query_str, ['nwb'],
                 function (err, result) {
                     if (err) {
                         res.status(400).json(err);
                     } else {
                         for (index = 0; index < result.rows.length; ++index) {
-                            var geometry = JSON.parse(result.rows[index].geopunt);
-                            delete result.rows[index].geopunt;
-                            result.rows[index].geometry = geometry;
-                            result.rows[index].type = "Feature";
-                            result.rows[index].properties = {};
-                            result.rows[index].properties.gid = result.rows[index].nummeraanduiding;
-                            result.rows[index].properties.nummeraanduiding = result.rows[index].nummeraanduiding;
-                            delete result.rows[index].nummeraanduiding;
-                            result.rows[index].properties.openbareruimtenaam = result.rows[index].openbareruimtenaam;
-                            delete result.rows[index].openbareruimtenaam;
-                            result.rows[index].properties.pand = result.rows[index].pand;
-                            delete result.rows[index].pand;
-                            result.rows[index].properties.huisnummer = result.rows[index].huisnummer;
-                            delete result.rows[index].huisnummer;
-                            result.rows[index].properties.huisletter = result.rows[index].huisletter;
-                            delete result.rows[index].huisletter;
-                            result.rows[index].properties.huisnummertoevoeging = result.rows[index].huisnummertoevoeging;
-                            delete result.rows[index].huisnummertoevoeging;
-                            result.rows[index].properties.postcode = result.rows[index].postcode;
-                            delete result.rows[index].postcode;
-                            result.rows[index].properties.woonplaatsnaam = result.rows[index].woonplaatsnaam;
-                            delete result.rows[index].woonplaatsnaam;
-                            result.rows[index].properties.gemeentenaam = result.rows[index].gemeentenaam;
-                            delete result.rows[index].gemeentenaam;
-                            result.rows[index].properties.provincienaam = result.rows[index].provincienaam;
-                            delete result.rows[index].provincienaam;
-                            result.rows[index].properties.typeadresseerbaarobject = result.rows[index].typeadresseerbaarobject;
-                            delete result.rows[index].typeadresseerbaarobject;
-                            result.rows[index].properties.adresseerbaarobject = result.rows[index].adresseerbaarobject;
-                            delete result.rows[index].adresseerbaarobject;
-                            result.rows[index].properties.nevenadres = result.rows[index].nevenadres;
-                            delete result.rows[index].nevenadres;
                         }
-                        res.json({"type": "FeatureCollection", "features": result.rows});
+                        res.json(result.rows);
                     }
                     return;
                 }
         );
+    }else {
+        res.status(400).json({"err": -1, "message": "infrastructure is not implemented"});
     }
 };
 

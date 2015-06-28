@@ -135,13 +135,14 @@ dbkjs.Layer = dbkjs.Class({
                 if (metadata.pl) {
                     this.layer.metadata.pl = metadata.pl;
                 }
+                this.layer.metadata.div = this.div;
             }
             this.div.append(dv_panel_content);
 
             if (dbkjs.util.isJsonNull(parent) && !dbkjs.util.isJsonNull(newparent)) {
                 var findMyParent = 'overlay_tab' + newparent.toLowerCase();
                 if ($('#' + findMyParent).length === 0 && $('#' + findMyParent + '_panel').length === 0) {
-                    //create a panel to hold the layers
+                    //create a panel to hold the layer
                     $('#overlaypanel_ul').append('<li><a href="#' + findMyParent +
                             '" data-toggle="tab">' + newparent + '</a></li>');
                     $('#overlaypanel_div').append('<div class="tab-pane" id="' +

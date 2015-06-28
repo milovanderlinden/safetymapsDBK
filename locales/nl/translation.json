@@ -45,6 +45,12 @@
         "download": "Download bestand",
         "hyperlink": "Open URL"
     },
+    "bag":{
+      "updated": "Mutatiedatum BAG"
+    },
+    "infra":{
+      "updated": "Mutatiedatum NWB"
+    },
     "map": {
         "prev": "Vorige",
         "next": "Volgende",

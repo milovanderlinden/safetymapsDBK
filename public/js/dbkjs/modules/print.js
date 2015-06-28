@@ -93,33 +93,16 @@ dbkjs.modules.print = {
             //first move the layer to the top!
             dbkjs.selectControl.deactivate();
             dbkjs.map.setLayerIndex(_obj.layer, dbkjs.map.getNumLayers());
-            var bounds = dbkjs.map.getExtent();
-            var res = dbkjs.map.getResolution();
-            var size = dbkjs.map.getSize();
-            var w = size.w - 200;
-            var h = Math.round(w / 1.468);
-            var min = dbkjs.map.getLonLatFromViewPortPx({x: 0 + 200, y: h});
-            var max = dbkjs.map.getLonLatFromViewPortPx({x: w, y: 0 + 200});
-
-            var r = dbkjs.util.gcd(w, h);
-            console.log("dimensions: " + w + "x" + h);
-            console.log("gcd: " + r);
-            console.log("aspect ratio: " + w / r + ":" + h / r + ' (need 1.468:1)');
-            if (w > h) {
-                console.log("landscape");
-            } else {
-                console.log("portrait");
-            }
+            var dims = _obj.calculatePrintbox();
             var ring = [
-                new OpenLayers.Geometry.Point(min.lon, min.lat),
-                new OpenLayers.Geometry.Point(min.lon, max.lat),
-                new OpenLayers.Geometry.Point(max.lon, max.lat),
-                new OpenLayers.Geometry.Point(max.lon, min.lat)
+                new OpenLayers.Geometry.Point(dims.min.lon, dims.min.lat),
+                new OpenLayers.Geometry.Point(dims.min.lon, dims.max.lat),
+                new OpenLayers.Geometry.Point(dims.max.lon, dims.max.lat),
+                new OpenLayers.Geometry.Point(dims.max.lon, dims.min.lat)
             ];
             var printfeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing(ring)]), {});
             _obj.layer.addFeatures([printfeature]);
             _obj.printbox = printfeature;
-
             dbkjs.map.addControl(_obj.printcontrol);
 
 
@@ -128,6 +111,10 @@ dbkjs.modules.print = {
             _obj.printcontrol.events.register("transformcomplete", _obj, _obj.transformComplete);
             _obj.printcontrol.events.register("transform", _obj, _obj.transform);
 
+            // When the dialog gets closed, deactivate too!
+            $('#systeem_meldingen').children('.close').click(function () {
+                _obj.clear();
+            });
             $('#printclick').click(function () {
                 _obj.printcontrol.deactivate();
                 dbkjs.selectControl.activate();
@@ -137,6 +124,12 @@ dbkjs.modules.print = {
         });
 
 
+    },
+    clear: function () {
+        var _obj = dbkjs.modules.print;
+        _obj.printcontrol.deactivate();
+        dbkjs.selectControl.activate();
+        _obj.printbox.destroy();
     },
     transform: function (evt) {
         var _obj = dbkjs.modules.print;
@@ -744,5 +737,35 @@ dbkjs.modules.print = {
             a.href = url;
         }
         return a.href;
+    },
+    calculatePrintbox: function () {
+        //var bounds = dbkjs.map.getExtent();
+        //var res = dbkjs.map.getResolution();
+        var size = dbkjs.map.getSize();
+        //var orientation = "landscape";
+        //if(size.w < size.h){
+        //   orientation = "portrait";
+        //}
+        var center = {x: Math.round(size.w / 2), y: Math.round(size.h /2)};        
+        var w = size.w - 200;
+        var h = Math.round(w / 1.428571429);
+        if(h > size.h - 200){
+            h = size.h - 200;
+            w = Math.round(h * 1.428571429);
+        }
+        //if(h < (size.h - 200)){
+            var min = dbkjs.map.getLonLatFromViewPortPx({x: center.x - Math.round(w / 2), y: center.y + Math.round(h/2)});
+            var max = dbkjs.map.getLonLatFromViewPortPx({x: center.x + Math.round(w / 2), y: center.y - Math.round(h/2)});
+            return {min: min, max:max};
+        //}
+//        var r = dbkjs.util.gcd(w, h);
+//        console.log("dimensions: " + w + "x" + h);
+//        console.log("gcd: " + r);
+//        console.log("aspect ratio: " + w / r + ":" + h / r + ' (need 1.468:1)');
+//        if (w > h) {
+//            console.log("landscape");
+//        } else {
+//            console.log("portrait");
+//        }
     }
 };

@@ -60,7 +60,7 @@ dbkjs.init = function () {
 };
 
 /**
- * Functie voor updaten van de zichtbaarheid van baselayers
+ * Function to update the visibility for baseLayers
  * @param {integer} nr
  */
 dbkjs.toggleBaseLayer = function (nr) {

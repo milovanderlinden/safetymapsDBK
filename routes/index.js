@@ -102,6 +102,7 @@ function setup(app) {
     app.get('/api/bag/info', bag.getVersion);
     app.get('/api/bag/adres/:id', bag.getAdres);
     app.get('/api/bag/panden/:id', bag.getPanden);
+    app.get('/api/infra/info', infra.getVersion);
     app.get('/api/autocomplete/:searchphrase', bag.autoComplete);
     app.get('/api/autocomplete/:searchtype/:searchphrase', infra.autoComplete);
     app.get('/api/incidents/list/classifications', incidents.getGroupByClasses);
