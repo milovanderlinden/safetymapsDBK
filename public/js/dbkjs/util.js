@@ -18,7 +18,7 @@
  *
  */
 
-/* global OpenLayers, i18n, jsts, moment */
+/* global OpenLayers, i18n, jsts, moment, DocumentTouch */
 
 Array.prototype.unique = function () {
     return this.filter(
@@ -162,7 +162,6 @@ dbkjs.Permalink =
                     }
                 }
                 if (center) {
-
                     //zoom
                     params.zoom = zoom || this.map.getZoom();
 
@@ -195,12 +194,10 @@ dbkjs.Permalink =
                             if (layer.metadata.pl && layer.getVisibility()) {
                                 params.ly.push(layer.metadata.pl);
                             }
-                            //params.layers += (layer.getVisibility()) ? "T" : "F";
                         }
                     }
 
                 }
-
                 return params;
             },
             CLASS_NAME: "dbkjs.Permalink"
@@ -324,7 +321,6 @@ dbkjs.util = {
      * @param {<OpenLayers.Layer>} obj
      */
     toggleOverlay: function (obj) {
-        console.log(obj);
         var layers = dbkjs.map.getLayersByName(obj.name);
         if (layers.length === 1) {
             if (obj.checked === true) {

@@ -298,7 +298,6 @@ dbkjs.finishMap = function () {
     dbkjs.permalink = new dbkjs.Permalink('permalink');
     dbkjs.map.addControl(dbkjs.permalink);
     dbkjs.util.configureLayers();
-    //get dbk!
 };
 
 dbkjs.setPaths = function () {

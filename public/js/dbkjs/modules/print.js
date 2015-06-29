@@ -746,26 +746,16 @@ dbkjs.modules.print = {
         //if(size.w < size.h){
         //   orientation = "portrait";
         //}
-        var center = {x: Math.round(size.w / 2), y: Math.round(size.h /2)};        
+        var center = {x: Math.round(size.w / 2), y: Math.round(size.h / 2)};
         var w = size.w - 200;
         var h = Math.round(w / 1.428571429);
-        if(h > size.h - 200){
+        if (h > size.h - 200) {
             h = size.h - 200;
             w = Math.round(h * 1.428571429);
         }
-        //if(h < (size.h - 200)){
-            var min = dbkjs.map.getLonLatFromViewPortPx({x: center.x - Math.round(w / 2), y: center.y + Math.round(h/2)});
-            var max = dbkjs.map.getLonLatFromViewPortPx({x: center.x + Math.round(w / 2), y: center.y - Math.round(h/2)});
-            return {min: min, max:max};
-        //}
-//        var r = dbkjs.util.gcd(w, h);
-//        console.log("dimensions: " + w + "x" + h);
-//        console.log("gcd: " + r);
-//        console.log("aspect ratio: " + w / r + ":" + h / r + ' (need 1.468:1)');
-//        if (w > h) {
-//            console.log("landscape");
-//        } else {
-//            console.log("portrait");
-//        }
+
+        var min = dbkjs.map.getLonLatFromViewPortPx({x: center.x - Math.round(w / 2), y: center.y + Math.round(h / 2)});
+        var max = dbkjs.map.getLonLatFromViewPortPx({x: center.x + Math.round(w / 2), y: center.y - Math.round(h / 2)});
+        return {min: min, max: max};
     }
 };

@@ -18,6 +18,8 @@
  *
  */
 
+/* global OpenLayers, moment */
+
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
 dbkjs.protocol = dbkjs.protocol || {};
@@ -913,7 +915,7 @@ dbkjs.protocol.jsonDBK = {
                     var myFeature = new OpenLayers.Feature.Vector(myline);
                     myFeature.attributes = {
                         "type": myGeometry.typeScheiding,
-                        "informatie": myGeometry.aanvullendeInformatie,
+                        "informatie": myGeometry.aanvullendeInformatie
                     };
                     features.push(myFeature);
                 }

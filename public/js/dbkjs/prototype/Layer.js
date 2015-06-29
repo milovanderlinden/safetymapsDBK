@@ -53,7 +53,6 @@ dbkjs.Layer = dbkjs.Class({
 
         switch (layertype) {
             case "TMS":
-                console.log("this layer is a tms");
                 // XXX in json you can't create OpenLayers objects. The following
                 // properties in params are converted to OpenLayers objects here:
 
@@ -182,7 +181,6 @@ dbkjs.Layer = dbkjs.Class({
                 });
             }
         } else {
-            //dbkjs.map.setLayerIndex(this.layer, 0);
             if (metadata) {
                 if (metadata.abstract) {
                     dv_panel_content.append('<p>' + metadata.abstract + '</p>');

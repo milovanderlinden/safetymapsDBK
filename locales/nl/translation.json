@@ -1,6 +1,7 @@
 {
     "app": {
         "title": "Safetymaps DBK",
+        "features": "DBK objecten",
         "queryAddress": "adres",
         "queryNumber": "omsnummer",
         "queryDBK": "dbk",
