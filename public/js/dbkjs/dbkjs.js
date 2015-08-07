@@ -172,78 +172,88 @@ dbkjs.loadOrganisationCapabilities = function () {
     if (dbkjs.options.organisation.wms) {
         dbkjs.loadingcapabilities = 0;
         $.each(dbkjs.options.organisation.wms, function (wms_k, wms_v) {
-            var index = wms_v.index || 0;
-            if (wms_v.getcapabilities === true) {
-                dbkjs.loadingcapabilities = dbkjs.loadingcapabilities + 1;
-                var options = {
-                    url: wms_v.url,
-                    title: wms_v.name,
-                    proxy: wms_v.proxy,
-                    index: index,
-                    parent: wms_v.parent
-                };
-                if (!dbkjs.util.isJsonNull(wms_v.pl)) {
-                    options.pl = wms_v.pl;
-                }
-                var myCapabilities = new dbkjs.Capabilities(options);
-            } else if (!wms_v.baselayer) {
-                var params = wms_v.params || {};
-                var options = wms_v.options || {};
-                var parent = wms_v.parent || null;
-                var metadata = {};
-                if (!dbkjs.util.isJsonNull(wms_v.abstract)) {
-                    metadata.abstract = wms_v.abstract;
-                }
-                if (!dbkjs.util.isJsonNull(wms_v.pl)) {
-                    metadata.pl = wms_v.pl;
-                }
-                if (!dbkjs.util.isJsonNull(wms_v.legend)) {
-                    metadata.legend = wms_v.legend;
-                }
-                var layertype = wms_v.layertype || null;
-                var myLayer = new dbkjs.Layer(
-                        wms_v.name,
-                        wms_v.url,
-                        params,
-                        options,
-                        parent,
-                        index,
-                        metadata,
-                        layertype
-                        );
-            } else {
-                var params = wms_v.params || {};
-                var options = wms_v.options || {};
-                options = OpenLayers.Util.extend({isBaseLayer: true}, options);
-                var parent = wms_v.parent || null;
-                var metadata = {};
-                if (!dbkjs.util.isJsonNull(wms_v.abstract)) {
-                    metadata.abstract = wms_v.abstract;
-                }
-                if (!dbkjs.util.isJsonNull(wms_v.pl)) {
-                    metadata.pl = wms_v.pl;
-                }
-                if (!dbkjs.util.isJsonNull(wms_v.legend)) {
-                    metadata.legend = wms_v.legend;
-                }
-                var layertype = wms_v.layertype || null;
-                var myLayer = new dbkjs.Layer(
-                        wms_v.name,
-                        wms_v.url,
-                        params,
-                        options,
-                        parent,
-                        index,
-                        metadata,
-                        layertype
-                        );
-            }
-
+          var options;
+          var params;
+          var parent;
+          var layertype;
+          var metadata;
+          var myLayer;
+          var index = wms_v.index || 0;
+          if (wms_v.getcapabilities === true) {
+              dbkjs.loadingcapabilities = dbkjs.loadingcapabilities + 1;
+              options = {
+                  url: wms_v.url,
+                  title: wms_v.name,
+                  proxy: wms_v.proxy,
+                  index: index,
+                  parent: wms_v.parent
+              };
+              /**
+               * Should extend options and params if they are
+               * passed from the organisation JSON (issue #413)
+               */
+              options.options = wms_v.options || {};
+              options.params = wms_v.params || {};
+              if (!dbkjs.util.isJsonNull(wms_v.pl)) {
+                  options.pl = wms_v.pl;
+              }
+              var myCapabilities = new dbkjs.Capabilities(options);
+          } else if (!wms_v.baselayer) {
+              params = wms_v.params || {};
+              options = wms_v.options || {};
+              parent = wms_v.parent || null;
+              metadata = {};
+              if (!dbkjs.util.isJsonNull(wms_v.abstract)) {
+                  metadata.abstract = wms_v.abstract;
+              }
+              if (!dbkjs.util.isJsonNull(wms_v.pl)) {
+                  metadata.pl = wms_v.pl;
+              }
+              if (!dbkjs.util.isJsonNull(wms_v.legend)) {
+                  metadata.legend = wms_v.legend;
+              }
+              layertype = wms_v.layertype || null;
+              myLayer = new dbkjs.Layer(
+                  wms_v.name,
+                  wms_v.url,
+                  params,
+                  options,
+                  parent,
+                  index,
+                  metadata,
+                  layertype
+              );
+          } else {
+              params = wms_v.params || {};
+              options = wms_v.options || {};
+              options = OpenLayers.Util.extend({isBaseLayer: true}, options);
+              parent = wms_v.parent || null;
+              metadata = {};
+              if (!dbkjs.util.isJsonNull(wms_v.abstract)) {
+                  metadata.abstract = wms_v.abstract;
+              }
+              if (!dbkjs.util.isJsonNull(wms_v.pl)) {
+                  metadata.pl = wms_v.pl;
+              }
+              if (!dbkjs.util.isJsonNull(wms_v.legend)) {
+                  metadata.legend = wms_v.legend;
+              }
+              layertype = wms_v.layertype || null;
+              myLayer = new dbkjs.Layer(
+                  wms_v.name,
+                  wms_v.url,
+                  params,
+                  options,
+                  parent,
+                  index,
+                  metadata,
+                  layertype
+              );
+          }
         });
         if (dbkjs.loadingcapabilities === 0) {
             dbkjs.finishMap();
         }
-
     } else {
         if (dbkjs.loadingcapabilities === 0) {
             dbkjs.finishMap();

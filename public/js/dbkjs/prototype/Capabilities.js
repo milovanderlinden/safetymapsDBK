@@ -1,8 +1,8 @@
 /*!
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
- * 
+ *
  *  This file is part of safetymapDBK
- *  
+ *
  *  safetymapDBK is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -69,10 +69,11 @@ dbkjs.Capabilities = dbkjs.Class({
                         if (!dbkjs.util.isJsonNull(options.pl)) {
                             metadata.pl = options.pl + lkey;
                         }
+                        var params = OpenLayers.Util.extend({layers: lval.name}, options.params);
                         var myLayer = new dbkjs.Layer(parent + '\\' + lval.title,
                                 _obj.url,
-                                {layers: lval.name},
-                                {},
+                                params,
+                                options.options,
                                 '',
                                 options.index + lkey,
                                 metadata
@@ -96,4 +97,3 @@ dbkjs.Capabilities = dbkjs.Class({
         });
     }
 });
-
